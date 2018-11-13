@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <link href="css/bootstrap.css" /> -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <link href="../lib/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../lib/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="../lib/css/checkbox3.min.css" rel="stylesheet" />
+    <link href="../css/style.css" rel="stylesheet" />
+    <link href="../js/laymobile/layer.css" rel="stylesheet" />
+    <script src="../js/laymobile/layer.js"></script>
+
+    <style>
+        body {
+            background-color: #E9E7E7;
+        }
+
+        .card {
+            margin: 20px;
+        }
+
+        .card-header {
+            background-color: #4e9bef;
+            font-size: 2.8rem;
+        }
+
+        .text {
+            font-size: 2.5rem !important;
+        }
+
+        .btn-block {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .btn-primary {
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .checkbox3 label::before, .radio3 label::before {
+            top: 15px;
+        }
+
+        .checkbox3 label::after, .radio3 label::after {
+            top: 15px;
+            font-size: 1.8rem;
+        }
+
+        .btn-primary:before {
+            background-image: url('../img/question-selected.png');
+            background-size: cover;
+            content: ' ';
+            position: relative;
+            right: 0;
+            width: 1.322667rem;
+            height: 1.1rem;
+            display: block;
+            background-repeat: no-repeat;
+            bottom: 0;
+        }
+    </style>
+
+    <script>
+
+        function choose() {
+            var html = $("#ckchoose").val();
+            layer.open({
+                content: html
+                , btn: ['确定', '取消']
+                , skin: 'footer'
+                , yes: function (index) {
+
+                }
+            });
+        }
+
+        function ck() {
+            $(".btn-primary:before").css({
+                "background-image": "url('../img/question-selected.png')",
+                "background-size": "cover"
+            });
+        }
+
+    </script>
+
+</head>
+<body>
+
+    <div class="card">
+        <div class="card-header">
+            问卷调查
+        </div>
+        <div class="card-body">
+            <h4 class="card-title text">1. 近3-6个月，您是否有生育的打算?(单选题)</h4>
+            <div>
+                <div class="radio3 radio-check radio-success">
+                    <input type="radio" id="radio0" name="radio" value="0">
+                    <label for="radio0" class="text">
+                        是
+                    </label>
+                </div>
+                <div class="radio3 radio-check radio-success">
+                    <input type="radio" id="radio1" name="radio" value="25">
+                    <label for="radio1" class="text">
+                        否
+                    </label>
+                </div>
+            </div>
+            <h4 class="card-title text">2. 您的父亲、母亲、兄弟、姐妹，目前或曾经是否有以下明确诊断的疾病？(多选题)</h4>
+            <div>
+                <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                    <input type="checkbox" value="5" onclick="choose()" id="checkbox-fa-light-1">
+                    <label for="checkbox-fa-light-1" class="text">
+                        肺癌
+                    </label>
+                </div>
+                <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                    <input type="checkbox" id="checkbox-fa-light-2">
+                    <label for="checkbox-fa-light-2" class="text">
+                        肝癌
+                    </label>
+                </div>
+                <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                    <input type="checkbox" id="checkbox-fa-light-3">
+                    <label for="checkbox-fa-light-3" class="text">
+                        胃癌
+                    </label>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+    <div style="padding: 10px;">
+        <button type="button" onclick="" class="btn btn-primary btn-lg btn-block">提交</button>
+    </div>
+
+    <textarea id="ckchoose" style="display: none;">
+        <!--<div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light" style="border:1px solid #727272;margin-bottom:5px">
+            <input type="checkbox" id="checkbox-fa">
+            <label for="checkbox-fa" class="text">
+                父亲
+            </label>
+        </div>
+        <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light" style="border:1px solid #727272;margin-bottom:5px">
+            <input type="checkbox" id="checkbox-ma">
+            <label for="checkbox-ma" class="text">
+                母亲
+            </label>
+        </div>
+        <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+            <input type="checkbox" id="checkbox-br">
+            <label for="checkbox-br" class="text">
+                兄弟
+            </label>
+        </div>
+        <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+            <input type="checkbox" id="checkbox-s">
+            <label for="checkbox-s" class="text">
+                姐妹
+            </label>
+        </div>-->
+        <button type="button" onclick="ck()" id="fa" class="btn btn-primary btn-lg btn-block">父亲</button>
+        <button type="button" onclick="" id="ma" class="btn btn-primary btn-lg btn-block">母亲</button>
+        <button type="button" onclick="" id="br" class="btn btn-primary btn-lg btn-block">兄弟</button>
+        <button type="button" onclick="" id="s" class="btn btn-primary btn-lg btn-block">姐妹</button>
+    </textarea>
+</body>
+</html>

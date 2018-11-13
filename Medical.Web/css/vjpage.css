@@ -1,0 +1,80 @@
+@charset "utf-8";
+
+/*---------------------body.css------------------*/
+.content-wrapper{ position:relative;}
+.alert a.close{text-decoration:none}
+iframe{
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+/*---------------------textli.css------------------*/
+.listbox {margin:0 0 0 0px;	padding:0 0 0 15px;  }
+		ul:after{ clear: both}
+		.listbox{list-style: none; padding-left: 0px; margin-left: 0px;}
+		.listbox  li{ padding:10px 15px; }
+		.listbox  li i{ margin-right: 15px;}
+		.listbox  li .ListCl{ }
+		.listbox  li .ListTitle,.listbox  li .ListCl{ color: #555;}
+		.listbox  li .ListCl~.ListTitle,.listbox  li .ListCl~a{ margin-left: 5px;}
+		.listbox  li a,.listbox  li a .ListCl{ text-decoration: none; color:#569; }
+		.listbox  li a:hover,.listbox  li a:hover .ListCl{ text-decoration: none; color:#69f; }
+		.listbox  li .ListCl~a,.listbox  li .ListTitle~a{display: block}
+		.listbox  li .fa.pull-left,.listbox li .olblock{ margin-right: 2em}
+		.ListTitle{ display: block}
+
+		/*响应鼠标样式*/
+
+		.listhavehover li:hover,.listhavehover li:nth-child(2n):hover{ background-color: #eee; cursor: pointer}
+		.listhavehover li a{color: #555;}
+			/*.listbox_style1	隔行变色*/
+
+
+		.listbox_style1 li:nth-child(2n),.listbox_style3 li:nth-child(2n){ background-color: #f6f6f6;}
+		/* .listbox_style3 	隔行变色，并第二列变小*/
+
+		/*.listbox_style2	分割线*/
+		.listbox_style2 li,.listbox_style4 li{ border-bottom: 1px solid #f0f0f0; padding-bottom: 9px;}
+
+		/*.listbox_style4 	分割线，并第二列变小*/
+		.listbox_style3  li .ListCl,.listbox_style4  li .ListCl{font-size: 13px; color: #666;}
+
+/*---------------------Panel.css------------------*/
+/* CSS Document */
+/* 块定义---------------------------------------------------------------------------------------------------------- */
+.Panel_c{
+	
+}
+
+.vjcenterpanel { margin:auto}
+header .vjcenterpanel { position:absolute;left:40px; right:40px;}
+.vjcenterpanel h1,.vjcenterpanel h2,.vjcenterpanel h3,.vjcenterpanel h4,.vjcenterpanel h5,.vjcenterpanel h6,.vjcenterpanel p,.vjcenterpanel { text-align:center}
+.vjcenterpanel .mui-btn-block{ padding:5px; margin-top:10px;}
+.mui-bar-footer{position: fixed; z-index: 10;right: 0; left: 0;height: 44px;border-bottom: 0; padding-right:0px;}
+.mui-bar-footer .vjtransp_b,.mui-bar-footer .vjtransp_w{  border:none; background-color:transparent;}
+.mui-bar .vjtransp_b,.mui-bar .vjtransp_w{top:0px;}
+
+/*圆角样式*/
+.vjradius_s,.vjradius_s .mui-popup-inner{ border-radius:3px}
+.vjradius_no,.vjradius_no .mui-popup-inner{ border-radius:0px}
+.vjradius_m,.vjradius_m .mui-popup-inner{ border-radius:10px}
+.vjradius_l,.vjradius_l .mui-popup-inner{ border-radius:20px}
+.vjradius_c,.vjradius_c .mui-popup-inner{border-radius:50%;text-algin:center}
+
+/*强制圆形*/
+.vj_circular,.vj_circular .mui-popup-inner{border-radius:50%; overflow:hidden;}
+
+/*遮罩样式*/
+.vjmaskbox{ height:100%; width:100%; background:rgba(0,0,0,.4); position:fixed; left:0px; top:0px; 
+    right: 0; bottom: 0;z-index:999;-webkit-transition-duration: 400ms;
+    transition-duration: 400ms;}
+
+
+
+
+/*---------------------chart.css------------------*/
+.TJChart {
+	border-color: #99bce8;
+	overflow:auto;
+}
