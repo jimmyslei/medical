@@ -447,7 +447,7 @@
                         var url = "BaseManageHandler.ashx?tag=AddPatientInfo";
                         var data = comFn.getFromVal();
                         data.Id = rowId;
-                        data.state = "0";
+                        data.state = "2";
                         if (save(url, data)) {
                             layer.open({
                                 content: '保存成功',

@@ -29,7 +29,7 @@ drop table  评估记录表;
 /*==============================================================*/
 create table 人员信息表 
 (
-   ID                   varchar(32)                       not null,
+   ID                   varchar(36)                       not null,
    姓名                   varchar(16)                    null,
    性别                   int                            null,
    编码						varchar(32)					null,

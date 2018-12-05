@@ -65,5 +65,20 @@ namespace Medical.Model
         /// </summary>
         public string Work { get; set; }
 
+        /// <summary>
+        /// 科室
+        /// </summary>
+        public string depName { get; set; }
+
+        /// <summary>
+        /// 科室Id
+        /// </summary>
+        public string depCode { get; set; }
+
+        /// <summary>
+        /// 床位
+        /// </summary>
+        public string bedNo { get; set; }
+
     }
 }

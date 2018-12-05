@@ -34,6 +34,8 @@
                     yes: function (index) {
                         var url = "BaseManageHandler.ashx?tag=UpdatePwd";
                         var data = comFn.getFromVal();
+                        data.userName = $("#userName").val();
+                        debugger
                         if (data.pwdok != data.pwd) {
                             layer.open({
                                 content: '确认密码与新密码不同',
