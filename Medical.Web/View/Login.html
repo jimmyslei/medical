@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>医疗系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="layer/theme/default/layer.css" rel="stylesheet" />
+    <link href="css/login.css" rel="stylesheet" />
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/Login.js"></script>
+    <script src="layer/layer.js"></script>
+    <script src="js/particles.min.js"></script>
+    <script src="js/Login/Treatment.js"></script>
+
+    <!--响应式媒体查询-->
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 599px)" href="css/sScreen.css" />
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 600px)" href="css/xScreen.css" />
+    <style>
+        .J_codeimg {
+            width: 85px;
+            height: 36px;
+            padding: 3px;
+            z-index: 0;
+            color: #FFF;
+            position:absolute;
+        }
+        #verifiyCode{
+            float:left;
+        }
+        #myCanvas{
+            margin-left:-80px;
+        }
+    </style>
+   
+
+</head>
+
+<body>
+    <div id="star"></div>
+    <div class="container">
+        <div class="title" style="text-align:center;">
+            <span>医疗统计系统</span>
+        </div>
+
+        <form action="#" method="post">
+            <div class="block">
+                <input type="text" id="tbUserName" placeholder="用户名" />
+            </div>
+            <div class="block" id="pwd">
+                <input type="password" id="tbPassword" placeholder="密码" />
+            </div>
+            <div class="block">
+                <input type="text" placeholder="验证码" id="verifiyCode" style="padding-right: 90px" />
+                <canvas class="J_codeimg" id="myCanvas" onclick="Code();">对不起，您的浏览器不支持canvas，请下载最新版浏览器!</canvas>
+            </div>
+            <div class="block">
+                <div class="radio3 radio-check radio-success" style="float:left;margin:10px;">
+                    <input type="radio" id="radio-admin" name="radio" value="1" checked>
+                    <label for="radio-admin" style="color:white">
+                        管理员登录
+                    </label>
+                </div>
+                <div class="radio3 radio-check radio-success" style="float:left;margin:10px">
+                    <input type="radio" id="radio-user" name="radio" value="2">
+                    <label for="radio-user" style="color:white">
+                        医护人员登录
+                    </label>
+                </div>
+            </div>
+            <div id="msg" class="msg"></div>
+            <div id="btnLogin" class="block btn" style="margin-top:-15px">登录</div>
+            <!--<div style="margin-top:20px;color:white;text-align:center;font-size:14px;">
+                <div>© 2018 </div>
+            </div>-->
+        </form>
+    </div>
+</body>
+</html>

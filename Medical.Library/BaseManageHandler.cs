@@ -24,11 +24,41 @@ namespace Medical.Library
             {
                 switch (tag)
                 {
-                    case "GetPaintList":
-                        rstr = GetPaintList(context);
+                    case "Login":
+                        rstr = Login(context);
                         break;
-                    case "GetPaintTotal":
-                        rstr = GetPaintTotal(context);
+                    case "UpdatePwd":
+                        rstr = UpdatePwd(context);
+                        break;
+                    case "GetDepartmentList":
+                        rstr = GetDepartmentList(context);
+                        break;
+                    case "EditDepartment":
+                        rstr = EditDepartment(context);
+                        break;
+                    case "GetPersonList":
+                        rstr = GetPersonList(context);
+                        break;
+                    case "GetPersonTotal":
+                        rstr = GetPersonTotal(context);
+                        break;
+                    case "EditPerson":
+                        rstr = EditPerson(context);
+                        break;
+                    case "GetHisPatientList":
+                        rstr = GetHisPatientList(context);
+                        break;
+                    case "GetHisPatienInfoByCode":
+                        rstr = GetHisPatienInfoByCode(context);
+                        break;
+                    case "GetPatientList":
+                        rstr = GetPatientList(context);
+                        break;
+                    case "AddPatientInfo":
+                        rstr = AddPatientInfo(context);
+                        break;
+                    case "DelPatient":
+                        rstr = DelPatient(context);
                         break;
                     default:
                         rstr = "tag方法未在定义范围内！";
@@ -38,7 +68,7 @@ namespace Medical.Library
             else
             {
                 rstr = "缺少操作参数tag";
-               // SystemLog.Error("请求参数中未传入[tag]，请求无法继续！");
+                // SystemLog.Error("请求参数中未传入[tag]，请求无法继续！");
             }
 
             context.Response.Clear();
@@ -54,17 +84,79 @@ namespace Medical.Library
             }
         }
 
-        
 
-        private string GetPaintList(HttpContext context)
+
+        private string Login(HttpContext context)
+        {
+            var userName = context.Request["userName"];
+            var pwd = context.Request["pwd"];
+            var state = Convert.ToInt32(context.Request["state"]);
+
+            PersonModel person = new PersonModel();
+            person.UserName = userName;
+            person.Pwd = pwd;
+            
+            return bases.Login(person, state);
+        }
+        
+        private string UpdatePwd(HttpContext context)
+        {
+            var userName = context.Request["userName"];
+            var pwd = context.Request["pwd"];
+            var pwdok = context.Request["pwdok"];
+
+            if (pwd!= pwdok)
+            {
+                return "确认密码与新密码不同";
+            }
+
+            return bases.UpdatePwd(userName, pwd);
+        }
+
+        private string GetDepartmentList(HttpContext context)
         {
             int pageIndex = !string.IsNullOrEmpty(context.Request["pageIndex"]) ? Convert.ToInt32(context.Request["pageIndex"]) : 0;
             int pageSize = !string.IsNullOrEmpty(context.Request["pageSize"]) ? Convert.ToInt32(context.Request["pageSize"]) : 0;
 
-            var result = bases.GetPaintList(pageIndex, pageSize);
+            var result = bases.GetDepartmentList(pageIndex, pageSize);
 
             var dataJson = result.ToJson();
-            var total = Convert.ToInt32(bases.GetPaintTotal());
+            var total = Convert.ToInt32(bases.GetDepTotal());
+            var pageCount = (total % pageSize) == 0 ? (total / pageSize) : (total / pageSize) + 1;
+
+            return "{" + "\"dataList\":" + dataJson + "," +
+                  "\"records\":" + total + "," +
+                  "\"page\":" + pageIndex + "," +
+                  "\"total\":" + pageCount + "}";
+        }
+
+        private string EditDepartment(HttpContext context)
+        {
+            var state = Convert.ToInt32(context.Request["state"]);
+            var Id = context.Request["Id"] == "" ? null : context.Request["Id"];
+            var name = context.Request["name"];
+            var code = context.Request["code"];
+            var remark = context.Request["remark"];
+
+            DepartmentModel dep = new DepartmentModel();
+            dep.Id = Convert.ToInt32(Id);
+            dep.DepCode = code;
+            dep.DepName = name;
+            dep.Remark = remark;
+
+            return bases.EditDepartment(dep, state);
+        }
+
+
+        private string GetPersonList(HttpContext context)
+        {
+            int pageIndex = !string.IsNullOrEmpty(context.Request["pageIndex"]) ? Convert.ToInt32(context.Request["pageIndex"]) : 0;
+            int pageSize = !string.IsNullOrEmpty(context.Request["pageSize"]) ? Convert.ToInt32(context.Request["pageSize"]) : 0;
+
+            var result = bases.GetPersonList(pageIndex, pageSize);
+
+            var dataJson = result.ToJson();
+            var total = Convert.ToInt32(bases.GetPersonTotal());
             var pageCount = (total % pageSize) == 0 ? (total / pageSize) : (total / pageSize) + 1;
 
             return "{" + "\"dataList\":" + dataJson + "," +
@@ -73,10 +165,130 @@ namespace Medical.Library
                   "\"totalPage\":" + pageCount + "}";
         }
 
-        private string GetPaintTotal(HttpContext context)
+        private string GetPersonTotal(HttpContext context)
         {
-            return bases.GetPaintTotal();
+            return bases.GetPersonTotal();
         }
+
+        /// <summary>
+        /// 编辑人员
+        /// </summary>
+        /// <param name="per"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        private string EditPerson(HttpContext context)
+        {
+            var state = Convert.ToInt32(context.Request["state"]);
+            var Id = context.Request["Id"];
+            var name = context.Request["name"];
+            var sex = context.Request["sex"];
+            var code = context.Request["code"];
+            var birth = context.Request["birth"];
+            var phone = context.Request["phone"];
+            var address = context.Request["address"];
+            var idCard = context.Request["idCard"];
+            var userName = context.Request["userName"];
+            var pwd = context.Request["pwd"];
+
+            PersonModel person = new PersonModel();
+            person.Id = Id;
+            person.Name = name;
+            person.Sex = Convert.ToInt32(sex);
+            person.Code = code;
+            person.Phone = phone;
+            person.Address = address;
+            person.Birth = Convert.ToDateTime(birth);
+            person.CardId = idCard;
+            person.UserName = userName;
+            person.Pwd = pwd;
+
+            return bases.EditPerson(person, state);
+        }
+
+        private string GetHisPatientList(HttpContext context)
+        {
+            int pageIndex = !string.IsNullOrEmpty(context.Request["pageIndex"]) ? Convert.ToInt32(context.Request["pageIndex"]) : 0;
+            int pageSize = !string.IsNullOrEmpty(context.Request["pageSize"]) ? Convert.ToInt32(context.Request["pageSize"]) : 0;
+
+            var result = bases.GetHisPatientList(pageIndex, pageSize);
+
+            var dataJson = result.ToJson();
+            var total = Convert.ToInt32(bases.GetPatientCount());
+            var pageCount = (total % pageSize) == 0 ? (total / pageSize) : (total / pageSize) + 1;
+
+            return "{" + "\"dataList\":" + dataJson + "," +
+                  "\"records\":" + total + "," +
+                  "\"page\":" + pageIndex + "," +
+                  "\"total\":" + pageCount + "}";
+        }
+
+        private string GetHisPatienInfoByCode(HttpContext context)
+        {
+            var code = context.Request["code"];
+            var result = bases.GetHisPatienInfoByCode(code);
+            return result.ToJson();
+        }
+
+        /// <summary>
+        /// 获取病人列表
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private string GetPatientList(HttpContext context)
+        {
+            int pageIndex = !string.IsNullOrEmpty(context.Request["pageIndex"]) ? Convert.ToInt32(context.Request["pageIndex"]) : 0;
+            int pageSize = !string.IsNullOrEmpty(context.Request["pageSize"]) ? Convert.ToInt32(context.Request["pageSize"]) : 0;
+
+            var result = bases.GetPatientList(pageIndex, pageSize);
+
+            var dataJson = result.ToJson();
+            var total = Convert.ToInt32(bases.GetPatientCount());
+            var pageCount = (total % pageSize) == 0 ? (total / pageSize) : (total / pageSize) + 1;
+
+            return "{" + "\"dataList\":" + dataJson + "," +
+                  "\"records\":" + total + "," +
+                  "\"page\":" + pageIndex + "," +
+                  "\"total\":" + pageCount + "}";
+        }
+
+        private string AddPatientInfo(HttpContext context)
+        {
+            var state = Convert.ToInt32(context.Request["state"]);
+            var Id = context.Request["Id"];
+            var name = context.Request["name"];
+            var sex = context.Request["sex"];
+            var code = context.Request["code"];
+            var phone = context.Request["phone"];
+            var cardId = context.Request["cardId"];
+            var age = context.Request["age"] == "" ? null: context.Request["age"];
+            var work = context.Request["work"];
+            var inTime = context.Request["inTime"];
+            var nowAddress = context.Request["nowAddress"];
+            var address = context.Request["address"];
+            var marry = context.Request["marry"];
+
+            PatientModel patien = new PatientModel();
+            patien.Id = Convert.ToInt32(Id);
+            patien.Name = name;
+            patien.Sex = Convert.ToInt32(sex);
+            patien.Code = code;
+            patien.Phone = phone;
+            patien.CardId = cardId;
+            patien.Age = Convert.ToInt32(age);
+            patien.InTime= Convert.ToDateTime(inTime);
+            patien.NowAddress = nowAddress;
+            patien.Address = address;
+            patien.Marry = Convert.ToInt32(marry);
+            patien.Work = work;
+
+            return bases.AddPatientInfo(patien, state);
+        }
+
+        private string DelPatient(HttpContext context)
+        {
+            var Id =Convert.ToInt32(context.Request["Id"]);
+            return bases.DelPatient(Id);
+        }  
 
     }
 }

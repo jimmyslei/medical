@@ -43,7 +43,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseManageHandler.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="View\BradenScale.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View\Department.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View\HisPatienList.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="View\Home.cs">

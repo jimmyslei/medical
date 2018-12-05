@@ -1,0 +1,12 @@
+F:\医疗外包\Medical\Medical.Common\bin\Debug\Medical.Common.dll
+F:\医疗外包\Medical\Medical.Common\bin\Debug\Medical.Common.pdb
+F:\医疗外包\Medical\Medical.Common\obj\Debug\Medical.Common.csprojResolveAssemblyReference.cache
+F:\医疗外包\Medical\Medical.Common\obj\Debug\Medical.Common.dll
+F:\医疗外包\Medical\Medical.Common\obj\Debug\Medical.Common.pdb
+F:\医疗外包\Medical\Medical.Common\bin\Debug\Newtonsoft.Json.dll
+F:\医疗\Medical\Medical.Common\bin\Debug\Medical.Common.dll
+F:\医疗\Medical\Medical.Common\bin\Debug\Medical.Common.pdb
+F:\医疗\Medical\Medical.Common\bin\Debug\Newtonsoft.Json.dll
+F:\医疗\Medical\Medical.Common\obj\Debug\Medical.Common.csprojResolveAssemblyReference.cache
+F:\医疗\Medical\Medical.Common\obj\Debug\Medical.Common.dll
+F:\医疗\Medical\Medical.Common\obj\Debug\Medical.Common.pdb

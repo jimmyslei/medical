@@ -1,0 +1,375 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using Yun.DataService;
+using Medical.Model;
+
+namespace Medical.Service
+{
+    public class BaseService
+    {
+        DataService service = new DataService();
+
+        #region 用户登录、修改密码
+        public string Login(PersonModel person, int state)
+        {
+            string sql = string.Empty;
+            if (state == 1)//系统管理员登录
+            {
+                sql = "select count(1) from 用户表 where 用户名=@userName and 密码=@pwd";
+            }
+            else if (state == 2)//医务人员登录
+            {
+                sql = "select count(1) from 人员信息表 where 编码=@code";
+            }
+
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@userName",person.UserName){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@pwd",person.Pwd){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@code",person.UserName){SqlDbType=SqlDbType.NVarChar}
+            };
+
+            return service.ExecuteScalar(sql, CommandType.Text, parmeter).ToString();
+        }
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="newPwd"></param>
+        /// <returns></returns>
+        public string UpdatePwd(string userName,string newPwd)
+        {
+            string sql = "update 用户表 set 密码=@pwd where 用户名=@userName";
+            SqlParameter[] query = {
+                new SqlParameter("@pwd",newPwd){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@userName",userName){SqlDbType=SqlDbType.NVarChar}
+            };
+            return service.ExecuteNonquery(sql, CommandType.Text, query).ToString();
+        }
+
+
+        #endregion
+
+        #region 科室
+
+        public DataTable GetDepartmentSelect()
+        {
+            string sql = @"select * from(
+                            select ID,名称,编码 ,标识,描述,ROW_NUMBER() over(order by d.id) as 序号 from 科室表 d) s
+                            where s.序号 between @beginRow and @endRow";
+            SqlParameter[] parmeter = new SqlParameter[] {
+
+            };
+            DataTable dt = service.GetDataSet(sql, CommandType.Text, parmeter).Tables[0];
+            if (dt != null)
+            {
+                return dt;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public DataTable GetDepartmentList(int beginRow, int endRow)
+        {
+            string sql = @"select * from(
+                            select ID,名称,编码 ,标识,描述,ROW_NUMBER() over(order by d.id) as 序号 from 科室表 d) s
+                            where s.序号 between @beginRow and @endRow";
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@beginRow",beginRow){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@endRow",endRow){SqlDbType=SqlDbType.Int}
+            };
+            DataTable dt = service.GetDataSet(sql, CommandType.Text, parmeter).Tables[0];
+            if (dt != null)
+            {
+                return dt;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string GetDepTotal()
+        {
+            string sql = "select count(1) from 科室表";
+            SqlParameter parmeter = new SqlParameter();
+
+            var result = service.ExecuteScalar(sql, CommandType.Text, parmeter);
+            return result.ToString();
+        }
+
+        public string EditDepartment(DepartmentModel dep, int state)
+        {
+            string sql = string.Empty;
+            //新增
+            if (state == 0)
+            {
+                sql = @"insert into 科室表(名称,编码,标识,描述) values(@name,@code,0,@remark)";
+            }
+            else if (state == 1)//修改
+            {
+                sql = @"update 科室表 set 名称=@name,编码=@code,描述=@remark where id=@Id";
+            }
+            else if (state == -1)//删除
+            {
+                sql = @"update 科室表 set 标识=-1 where id=@Id";
+            }
+
+            SqlParameter[] query = {
+                new SqlParameter("@Id",dep.Id){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@name",dep.DepName){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@code",dep.DepCode){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@remark",dep.Remark){SqlDbType=SqlDbType.NVarChar}
+            };
+
+            return service.ExecuteNonquery(sql, CommandType.Text, query).ToString();
+        }
+
+        #endregion
+
+        #region 人员
+        /// <summary>
+        /// 获取人员列表
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetPersonList(int beginRow, int endRow)
+        {
+            string sql = @"select * from(
+                select i.id,i.姓名,i.性别,i.编码,i.身份证号,CONVERT(varchar(60),i.出生日期,20) 出生日期,i.联系方式,i.住址,ROW_NUMBER() over(order by id) as 序号
+                from 人员信息表 i where i.标识=0)a where a.序号 between @beginRow and @endRow";
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@beginRow",beginRow){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@endRow",endRow){SqlDbType=SqlDbType.Int}
+            };
+
+            DataSet ds = service.GetDataSet(sql, CommandType.Text, parmeter);
+            if (ds.Tables[0] != null)
+            {
+                return ds.Tables[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 获取人员总数
+        /// </summary>
+        /// <returns></returns>
+        public string GetPersonTotal()
+        {
+            string sql = "select count(1) from 人员信息表 where 标识=0";
+            SqlParameter parmeter = new SqlParameter();
+
+            var result = service.ExecuteScalar(sql, CommandType.Text, parmeter);
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// 编辑人员
+        /// </summary>
+        /// <param name="per"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public string EditPerson(PersonModel per, int type)
+        {
+            string sql = string.Empty;
+            var userId = string.Empty;
+
+            //insert
+            if (type == 0)
+            {
+                userId = Guid.NewGuid().ToString();
+                sql = @"insert into 人员信息表(ID,姓名,性别,编码,出生日期,身份证号,联系方式,住址,标识) values(@userId,@name,@sex,@code,@birth,@idCard,@phone,@address,0)";
+            }
+            else if (type == 1)//update
+            {
+                userId = per.Id;
+                sql = @"update 人员信息表 set 姓名=@name,性别=@sex,出生日期=@birth,身份证号=@idCard
+                                      ,联系方式=@phone,住址=@address,编码=@code where id=@userId";
+            }
+            else//delete
+            {
+                userId = per.Id;
+                sql = @"update 人员信息表 set 标识=-1 where id=@userId";
+
+                SqlParameter[] par = {
+                    new SqlParameter("@userId",userId){SqlDbType=SqlDbType.NVarChar}
+                };
+                return service.ExecuteNonquery(sql, CommandType.Text, par).ToString();
+            }
+
+            SqlParameter[] query = {
+                new SqlParameter("@name",per.Name){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@sex",per.Sex){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@birth",per.Birth){SqlDbType=SqlDbType.DateTime},
+                new SqlParameter("@idCard",per.CardId){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@phone",per.Phone){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@address",per.Address){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@userName",per.UserName){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@pwd",per.Pwd){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@code",per.Code){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@userId",userId){SqlDbType=SqlDbType.NVarChar}
+            };
+
+            return service.ExecuteNonquery(sql, CommandType.Text, query).ToString();
+
+        }
+        #endregion
+
+        #region 病人信息
+
+        /// <summary>
+        /// his病人信息
+        /// </summary>
+        /// <param name="beginRow"></param>
+        /// <param name="endRow"></param>
+        /// <returns></returns>
+        public DataTable GetHisPatientList(int beginRow, int endRow)
+        {
+            string sql = @"select * from(
+                select [ID]
+                      ,[姓名]
+                      ,[性别]
+                      ,年龄
+                      ,[身份证号]
+                      ,[联系方式]
+                      ,[联系地址]
+                      ,[婚姻状况]
+                      ,[户籍地址]
+                      ,[工作单位]
+                      ,CONVERT(varchar(60),登记时间,23) 登记时间
+                      ,[标识]
+                      ,[编码]
+                      ,[科室]
+                      ,[科室id],[床位],ROW_NUMBER() over(order by id) as 序号
+                from His病人信息表 where 标识=0 )a where a.序号 between @beginRow and @endRow";
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@beginRow",beginRow){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@endRow",endRow){SqlDbType=SqlDbType.Int}
+            };
+
+            DataTable dt = service.GetDataSet(sql, CommandType.Text, parmeter).Tables[0];
+            if (dt != null)
+            {
+                return dt;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public DataTable GetHisPatienInfoByCode(string code)
+        {
+            string sql = @"select [ID]
+                                  ,[姓名]
+                                  ,[性别]
+                                  ,年龄
+                                  ,[身份证号]
+                                  ,[联系方式]
+                                  ,[联系地址]
+                                  ,[婚姻状况]
+                                  ,[户籍地址]
+                                  ,[工作单位]
+                                  ,CONVERT(varchar(60),登记时间,23) 登记时间
+                                  ,[标识]
+                                  ,[编码]
+                                  ,[科室]
+                      ,[科室id],[床位] from His病人信息表 where 编码=@code";
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@code",code){SqlDbType=SqlDbType.NVarChar}
+            };
+
+            DataTable dt = service.GetDataSet(sql, CommandType.Text, parmeter).Tables[0];
+            if (dt != null)
+            {
+                return dt;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+        public DataTable GetPatientList(int beginRow, int endRow)
+        {
+            string sql = @"select * from(
+                select id,姓名,性别,年龄,编码,身份证号,联系方式,联系地址,婚姻状况,户籍地址,工作单位,[床位]
+                 ,[科室Id],[科室],CONVERT(varchar(60),登记时间,20) 登记时间,标识,ROW_NUMBER() over(order by id) as 序号
+                from 病人信息表 where 标识=0 )a where a.序号 between @beginRow and @endRow";
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@beginRow",beginRow){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@endRow",endRow){SqlDbType=SqlDbType.Int}
+            };
+
+            DataTable dt = service.GetDataSet(sql, CommandType.Text, parmeter).Tables[0];
+            if (dt != null)
+            {
+                return dt;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string GetPatientCount()
+        {
+            string sql = "select count(1) from 病人信息表 where 标识=0";
+            SqlParameter parmeter = new SqlParameter();
+            return service.ExecuteScalar(sql, CommandType.Text, parmeter).ToString();
+        }
+
+        public string AddPatientInfo(PatientModel patien, int state)
+        {
+            string sql = "";
+            if (state == 1)
+            {
+                sql = @"insert into 病人信息表(姓名,性别,编码,年龄,身份证号,联系方式,联系地址,婚姻状况,户籍地址,工作单位,登记时间,标识) 
+                            values(@name,@sex,@code,@age,@cardId,@phone,@nowAddress,@Marry,@address,@work,@dateTime,0)";
+            }
+            else
+            {
+                sql = @"update 病人信息表 set 姓名=@name,性别=@sex,编码=@code,年龄=@age,身份证号=@cardId,联系方式=@phone,联系地址=@nowAddress,
+                        婚姻状况=@Marry,户籍地址=@address,工作单位=@work,登记时间=@dateTime where Id=@Id";
+            }
+
+            SqlParameter[] query = {
+                new SqlParameter("@Id",patien.Id){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@name",patien.Name){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@sex",patien.Sex){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@code",patien.Code){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@age",patien.Age){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@cardId",patien.CardId){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@phone",patien.Phone){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@nowAddress",patien.NowAddress){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@Marry",patien.Marry){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@address",patien.Address){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@work",patien.Work){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@dateTime",patien.InTime){SqlDbType=SqlDbType.DateTime}
+            };
+
+            return service.ExecuteNonquery(sql, CommandType.Text, query).ToString();
+        }
+
+        public string DelPatient(int Id)
+        {
+            string sql = "update 病人信息表 set 标识=-1 where Id=@Id";
+            SqlParameter[] query = {
+                new SqlParameter("@Id",Id){SqlDbType=SqlDbType.Int},
+            };
+            return service.ExecuteNonquery(sql, CommandType.Text, query).ToString();
+        }
+
+        #endregion
+    }
+}

@@ -6,6 +6,10 @@
     <link rel="stylesheet" type="text/css" href="../css/themes/flat-blue.css">
     <link href="../js/layui/css/layui.css" rel="stylesheet" />
     <link href="../js/laymobile/layer.css" rel="stylesheet" />
+    <script src="../js/jquery-2.1.1.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../js/laymobile/layer.css" rel="stylesheet" />
+    <script src="../js/laymobile/layer.js"></script>
     <style>
         .card-header {
             background-color: #4e9bef;
@@ -25,7 +29,61 @@
             background-color: #007DDB !important;
         }
     </style>
+    <script>
+        $(function () {
+            $(".username").text(getCookie("Home_UserName"));
+            var state = getCookie("state");
+            if (state == "2") {
+                $("#baseLi").hide();
+            }
 
+            $("#exitLogin").click(function () {
+                delCookie("Home_UserName");
+                window.location.href = "Login.html";
+            });
+
+            $("#updatePwd").click(function () {
+                var html = $("#update").val();
+                layer.open({
+                    content: html,
+                    shadeClose: true,
+                    btn: ['确定', '取消'],
+                    anim: 'up',
+                    yes: function (index) {
+                        var url = "BaseManageHandler.ashx?tag=UpdatePwd";
+                        var data = comFn.getFromVal();
+                        if (data.pwdok != data.pwd) {
+                            layer.open({
+                                content: '确认密码与新密码不同',
+                                skin: 'msg',
+                                time: 2
+                            });
+                            return false;
+                        }
+                        if (save(url, data)) {
+                            layer.open({
+                                content: '修改成功',
+                                skin: 'msg',
+                                time: 2
+                            });
+                            layer.close(index);
+                            queryFunc(pageIndex, pageSize);
+
+                        } else {
+                            layer.open({
+                                content: '修改失败',
+                                skin: 'msg',
+                                time: 2
+                            });
+                        }
+                    },
+                    success: function (elem) {
+
+                    }
+                });
+            });
+        })
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container-fluid">

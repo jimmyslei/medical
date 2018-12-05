@@ -8,7 +8,7 @@ namespace Medical.Model
 {
     public class PersonModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// 姓名
@@ -49,5 +49,10 @@ namespace Medical.Model
         /// 地址
         /// </summary>
         public string Address { get; set; }
+
+        /// <summary>
+        /// 编码
+        /// </summary>
+        public string Code { get; set; }
     }
 }

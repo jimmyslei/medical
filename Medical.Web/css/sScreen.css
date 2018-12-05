@@ -1,0 +1,116 @@
+﻿.container {
+	width: 80%;
+    min-width:190px;
+    height:auto;
+    margin-top:-270px;
+    left:10%;
+}
+
+.title {
+	font-size:	25px;
+}
+form {
+	padding: 25px;
+    padding-bottom:45px;
+}
+
+form>div.block{
+    position:relative;
+    width:100%;
+    height:30px;
+    margin-bottom:25px;
+    text-align:left;
+}
+form>div.block>input{
+    position:relative;
+    width:100%;
+    height:100%;
+    border:1px solid rgba(255,255,255,.5);
+    border-radius:3px;
+    box-sizing:border-box;
+    background-color:rgba(255,255,255,.7);
+    outline:none;
+    padding:0 10px;
+    line-height:28px;
+    font-size:13px;
+}
+form>div.block>input:hover,form>div.block>input:focus{
+    box-shadow:0 0 7px rgba(255,255,255,.9);
+}
+.block.btn{
+    line-height:30px;
+    letter-spacing:.3em;
+    font-size:15px;
+    border-radius:5px;
+    background-color:#6495ED;
+    color:white;
+    cursor:pointer;
+    box-sizing:border-box;
+    text-align:center;
+    margin-bottom:0;
+}
+.block.btn:hover{
+    border:1px solid rgba(255,255,255,.8);
+    line-height:28px;
+}
+#img_rnd{
+    border-radius:3px;
+    position:absolute;
+    right:0;
+    top:0;
+    width: 80px;
+    height:30px
+}
+.people .change,.people .line{
+    position:relative;
+    float:left;
+    left:0;
+    top:0;
+    width:auto;
+    line-height:25px;
+    font-size:13px;
+    color:white;
+    cursor:pointer;
+}
+.people .change:hover{
+    color:#FF7256;
+}
+.people .change.selected {
+    color:#FF7256;
+    pointer-events:none;
+}
+.people select{
+    position:absolute;
+    width:auto;
+    min-width:100px;
+    height:21px;
+    top:2px;
+    right:0;
+    cursor:pointer;
+    border-radius:2px;
+    outline: none;
+    background-color:rgba(255,255,255,.7);
+    display:none;
+    font-size:13px;
+}
+ .people input[type=radio] {
+        position: relative;
+        float: left;
+        left: 0;
+        width: 14px;
+        height: 14px;
+        top: 13px;
+        margin-right: 3px;
+    }
+
+    .people label {
+        position: relative;
+        float: left;
+        left: 0;
+        cursor: pointer;
+        line-height: 30px;
+        font-size: 13px;
+        color: white;
+        margin-right: 1em;
+        user-select: none;
+    }

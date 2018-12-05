@@ -13,14 +13,60 @@ namespace Medical.Service
     {
         DataService ser = new DataService();
 
+        #region 登录
+        public string Login(PersonModel person, int state)
+        {
+            string sql = string.Empty;
+            if (state == 1)
+            {
+                sql = @"select count(1) from 用户表 where 用户名=@userName and 密码=@pwd";
+            }
+            else
+            {
+                sql = @"select count(1) from 人员信息表 where 编码=@userName";
+            }
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@userName",person.UserName){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@pwd",person.Pwd){SqlDbType=SqlDbType.NVarChar}
+            };
+
+            return ser.ExecuteScalar(sql, CommandType.Text, parmeter).ToString();
+        }
+
+        public string UpdatePwd(string userName, string newPwd)
+        {
+            string sql = @"update 用户表 set 密码=@pwd where 用户名=@userName";
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@userName",userName){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@pwd",newPwd){SqlDbType=SqlDbType.NVarChar}
+            };
+
+            return ser.ExecuteNonquery(sql, CommandType.Text, parmeter).ToString();
+        }
+
+        #endregion
+
         #region 科室
 
-        public DataSet GetDepartmentList()
+        public DataTable GetDepartmentList(int beginRow, int endRow)
         {
-            string sql = "select * from 科室表";
-            SqlParameter parmenter = new SqlParameter();
-            DataSet ds = ser.GetDataSet(sql, CommandType.Text, parmenter);
-            return ds;
+            string sql = @"select * from(
+                select Id,[名称],[编码] ,[描述],[标识] from 科室表,ROW_NUMBER() over(order by u.id) as 序号) a 
+                where a.序号 between @beginRow and @endRow";
+
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@beginRow",beginRow){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@endRow",endRow){SqlDbType=SqlDbType.Int}
+            };
+            DataSet ds = ser.GetDataSet(sql, CommandType.Text, parmeter);
+            if (ds.Tables[0] != null)
+            {
+                return ds.Tables[0];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         #endregion

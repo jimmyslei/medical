@@ -3,6 +3,88 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" type="text/css" href="../css/themes/flat-blue.css">
+    <script src="../js/jquery-2.1.1.min.js"></script>
+    <script src="../js/Common.js"></script>
+    <link href="../js/laymobile/layer.css" rel="stylesheet" />
+    <script src="../js/laymobile/layer.js"></script>
+    <script>
+
+        $(function () {
+            var state = comFn.getQueryString("state");
+            $(".username").text(getCookie("Home_UserName"));
+            
+            setCookie("state", state, 30);
+            if (state == "2") {
+                $("#baseLi").hide();
+                $("#updatePwd").hide();
+            }
+
+            $("#exitLogin").click(function () {
+                delCookie("Home_UserName");
+                window.location.href = "../Login";
+            });
+
+            $("#updatePwd").click(function () {
+                var html = $("#update").val();
+                layer.open({
+                    content: html,
+                    shadeClose: true,
+                    btn: ['确定', '取消'],
+                    anim: 'up',
+                    yes: function (index) {
+                        var url = "BaseManageHandler.ashx?tag=UpdatePwd";
+                        var data = comFn.getFromVal();
+                        if (data.pwdok != data.pwd) {
+                            layer.open({
+                                content: '确认密码与新密码不同',
+                                skin: 'msg',
+                                time: 2
+                            });
+                            return false;
+                        }
+                        if (save(url, data)) {
+                            layer.open({
+                                content: '修改成功',
+                                skin: 'msg',
+                                time: 2
+                            });
+                            layer.close(index);
+                            queryFunc(pageIndex, pageSize);
+
+                        } else {
+                            layer.open({
+                                content: '修改失败',
+                                skin: 'msg',
+                                time: 2
+                            });
+                        }
+                    },
+                    success: function (elem) {
+                        $("#userName").val(getCookie("Home_UserName"));
+                    }
+                });
+            });
+        })
+
+        function save(url, data) {
+            var result = false;
+            comFn.Ajax(url, data, function (data) {
+                if (data == "1") {
+                    result = true;
+                }
+                else {
+                    result = false;
+                }
+            }, function (data) {
+                result = false;
+            }, false);
+            return result;
+        }
+
+
+    </script>
+
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container-fluid">
@@ -66,8 +148,8 @@
                 </div>
             </div>
             <div class="row  no-margin-bottom">
-               <%-- <div class="col-sm-6 col-xs-12">--%>
-                    <%--  <div class="row">
+                <%-- <div class="col-sm-6 col-xs-12">--%>
+                <%--  <div class="row">
                         <div class="col-xs-12">
                             <div class="card primary">
                                 <div class="card-jumbotron no-padding">
@@ -81,7 +163,7 @@
                             </div>
                         </div>
                     </div>--%>
-                  <%--  <div class="row">
+                <%--  <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <div class="thumbnail no-margin-bottom">
                                 <img src="../img/thumbnails/picjumbo.com_IMG_4566.jpg" class="img-responsive">
@@ -103,7 +185,7 @@
                             </div>
                         </div>
                     </div>--%>
-               <%-- </div>--%>
+                <%-- </div>--%>
                 <div class="col-sm-6 col-xs-12">
                     <%--  <div class="row">
                         <div class="col-md-6 col-sm-12">
@@ -182,7 +264,7 @@
                                         </div>
                                     </li>
                                 </a>
-                               <%-- <a href="#" id="message-load-more">
+                                <%-- <a href="#" id="message-load-more">
                                     <li class="text-center load-more">
                                         <i class="fa fa-refresh"></i>load more..
                                     </li>
