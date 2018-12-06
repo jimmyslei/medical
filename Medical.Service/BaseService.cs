@@ -48,6 +48,21 @@ namespace Medical.Service
 
         #region 科室
 
+        public DataTable GetDepList()
+        {
+            string sql = "select Id,[名称],[编码] from 科室表 where 标识=0";
+            SqlParameter[] parmeter = new SqlParameter[] { };
+            DataTable dt = ser.GetDataSet(sql, CommandType.Text, parmeter).Tables[0];
+            if (dt != null)
+            {
+                return dt;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public DataTable GetDepartmentList(int beginRow, int endRow)
         {
             string sql = @"select * from(
@@ -116,7 +131,7 @@ namespace Medical.Service
                       ,[姓名]
                       ,[性别]
                       ,[编码]
-                      ,[出生日期]
+                      ,CONVERT(varchar(60), 出生日期, 23) 出生日期
                       ,[身份证号]
                       ,[联系方式]
                       ,[住址]
@@ -158,7 +173,7 @@ namespace Medical.Service
             string userId = string.Empty;
             if (type == 0)
             {
-                userId = new Guid().ToString();
+                userId = Guid.NewGuid().ToString();
                 sql = @"insert into 人员信息表([ID]
                       ,[姓名]
                       ,[性别]
@@ -173,21 +188,25 @@ namespace Medical.Service
             {
                 userId = per.Id;
                 sql = @"update 人员信息表 set 姓名=@name
-                      ,[性别]=@sex
-                      ,[编码]=@code
-                      ,[出生日期]=@birth
-                      ,[身份证号]=@cardId
-                      ,[联系方式]=@phone
+                      ,性别=@sex
+                      ,编码=@code
+                      ,出生日期=@birth
+                      ,身份证号=@cardId
+                      ,联系方式=@phone
                       ,住址=@address where Id=@Id";
             }
             else//delete
             {
                 userId = per.Id;
                 sql = "update 人员信息表 set 标识 =-1 where id=@Id";
+                SqlParameter[] parmter = {
+                    new SqlParameter("@Id",userId){SqlDbType=SqlDbType.NVarChar}
+                };
+                return ser.ExecuteNonquery(sql, CommandType.Text, parmter).ToString();
             }
 
             SqlParameter[] query = {
-                new SqlParameter("@Id",per.Id){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@Id",userId){SqlDbType=SqlDbType.NVarChar},
                 new SqlParameter("@name",per.Name){SqlDbType=SqlDbType.NVarChar},
                 new SqlParameter("@sex",per.Sex){SqlDbType=SqlDbType.Int},
                 new SqlParameter("@code",per.Code){SqlDbType=SqlDbType.NVarChar},
@@ -215,7 +234,7 @@ namespace Medical.Service
                   ,[婚姻状况]
                   ,[户籍地址]
                   ,[工作单位]
-                  ,[登记时间]
+                  ,CONVERT(varchar(60), 登记时间, 20) 登记时间
                   ,[标识]
                   ,[编码]
                   ,[科室]
@@ -250,7 +269,7 @@ namespace Medical.Service
                   ,[婚姻状况]
                   ,[户籍地址]
                   ,[工作单位]
-                  ,[登记时间]
+                  ,CONVERT(varchar(60), 登记时间, 20) 登记时间
                   ,[标识]
                   ,[编码]
                   ,[科室]
@@ -286,12 +305,12 @@ namespace Medical.Service
                   ,[婚姻状况]
                   ,[户籍地址]
                   ,[工作单位]
-                  ,[登记时间]
+                  ,CONVERT(varchar(60), 登记时间, 20) 登记时间
                   ,[科室]
                   ,[科室Id]
                   ,[床位]
                   ,[标识],ROW_NUMBER() over(order by ID) as 序号
-                from 病人信息表 where 标识=0)a where a.序号 between @beginRow and @endRow";
+                from 病人信息表 where 标识!=-1)a where a.序号 between @beginRow and @endRow";
             SqlParameter[] parmeter = new SqlParameter[] {
                 new SqlParameter("@beginRow",beginRow){SqlDbType=SqlDbType.Int},
                 new SqlParameter("@endRow",endRow){SqlDbType=SqlDbType.Int}
@@ -310,7 +329,7 @@ namespace Medical.Service
 
         public string GetPatientCount()
         {
-            string sql = "select count(1) from 病人信息表 where 标识=0";
+            string sql = "select count(1) from 病人信息表 where 标识!=-1";
             SqlParameter[] parmeter = new SqlParameter[] { };
             return ser.ExecuteScalar(sql, CommandType.Text, parmeter).ToString();
         }
@@ -373,12 +392,21 @@ namespace Medical.Service
             };
 
             return ser.ExecuteNonquery(sql, CommandType.Text, parmeter).ToString();
-            
+
         }
 
-        public string DelPatient(int Id)
+        public string DelPatient(int Id, int state)
         {
-            string sql = "update 病人信息表 set 标识=-1 where Id=@Id";
+            string sql = string.Empty;
+            if (state == -1)
+            {
+                sql = "update 病人信息表 set 标识=-1 where Id=@Id";
+            }
+            else if (state == 1)
+            {
+                sql = "update 病人信息表 set 标识=1 where Id=@Id";
+            }
+
             SqlParameter[] parmeter = new SqlParameter[] {
                 new SqlParameter("@Id",Id){SqlDbType=SqlDbType.Int}
             };

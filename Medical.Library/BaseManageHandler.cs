@@ -30,6 +30,9 @@ namespace Medical.Library
                     case "UpdatePwd":
                         rstr = UpdatePwd(context);
                         break;
+                    case "GetDepList":
+                        rstr = GetDepList(context);
+                        break;
                     case "GetDepartmentList":
                         rstr = GetDepartmentList(context);
                         break;
@@ -111,6 +114,12 @@ namespace Medical.Library
             }
 
             return bases.UpdatePwd(userName, pwd);
+        }
+
+
+        private string GetDepList(HttpContext context)
+        {
+            return  bases.GetDepList().ToJson();
         }
 
         private string GetDepartmentList(HttpContext context)
@@ -266,6 +275,9 @@ namespace Medical.Library
             var nowAddress = context.Request["nowAddress"];
             var address = context.Request["address"];
             var marry = context.Request["marry"];
+            var depName = context.Request["depName"];
+            var dep = context.Request["dep"];
+            var badNo = context.Request["badno"];
 
             PatientModel patien = new PatientModel();
             patien.Id = Convert.ToInt32(Id);
@@ -280,6 +292,9 @@ namespace Medical.Library
             patien.Address = address;
             patien.Marry = Convert.ToInt32(marry);
             patien.Work = work;
+            patien.bedNo = badNo;
+            patien.depCode = dep;
+            patien.depName = depName;
 
             return bases.AddPatientInfo(patien, state);
         }
@@ -287,7 +302,8 @@ namespace Medical.Library
         private string DelPatient(HttpContext context)
         {
             var Id =Convert.ToInt32(context.Request["Id"]);
-            return bases.DelPatient(Id);
+            var state = Convert.ToInt32(context.Request["state"]);
+            return bases.DelPatient(Id, state);
         }  
 
     }

@@ -42,17 +42,26 @@
                             <div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        <button type="button" onclick="Add()" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;新增</button>
+                                        <%--<button type="button" onclick="Add()" class="btn btn-success"><i class="fa fa-plus-square"></i>&nbsp;新增</button>
                                         <button type="button" onclick="Edit()" class="btn btn-warning"><i class="fa fa-edit"></i>&nbsp;修改</button>
-                                        <button type="button" onclick="Del()" class="btn btn-danger"><i class="fa fa fa-trash-o"></i>&nbsp;删除</button>
+                                        <button type="button" onclick="Del()" class="btn btn-danger"><i class="fa fa fa-trash-o"></i>&nbsp;删除</button>--%>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作 <span class="caret"></span></button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#" onclick="Del(1,'确定要给给病人办理出院吗？')">出院</a></li>
+                                                <li><a href="#" onclick="Add()">新增</a></li>
+                                                <li><a href="#" onclick="Edit()">修改</a></li>
+                                                <li><a href="#" onclick="Del(-1,'确定要删除该数据吗？')">删除</a></li>
+                                            </ul>
+                                        </div>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">风险评估 <span class="caret"></span></button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li><a href="#">疼痛评估</a></li>
-                                                <li><a href="#">跌倒评估</a></li>
-                                                <li><a href="#">压疮评估</a></li>
-                                                <li><a href="#">VTE评估</a></li>
-                                                <li><a href="#">非计划拔管评估</a></li>
+                                                <li><a href="#" onclick="Assess(1)">疼痛评估</a></li>
+                                                <li><a href="#" onclick="Assess(2)">跌倒评估</a></li>
+                                                <li><a href="#" onclick="Assess(3)">压疮评估</a></li>
+                                                <li><a href="#" onclick="Assess(4)">VTE评估</a></li>
+                                                <li><a href="#" onclick="Assess(5)">非计划拔管评估</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -98,8 +107,6 @@
                                 <div class="form-group text-show">
                                     <label for="sex">科室</label>
                                     <select class="form-control text select2-selection" cName="dep" id="dep">
-                                        <option value="1"></option>
-                                        <option value="0"></option>
                                     </select>
                                 </div>
                                 <div class="form-group text-show">
@@ -166,7 +173,7 @@
 
             $("#exitLogin").click(function () {
                 delCookie("Home_UserName");
-                window.location.href = "Login.html";
+                window.location.href = "../Login";
             });
 
             $("#updatePwd").click(function () {
@@ -236,6 +243,9 @@
                             $("#nowaddress").val(rdata[0]['联系地址']);
                             $("#work").val(rdata[0]['工作单位']);
                             $("#address").val(rdata[0]['户籍地址']);
+                            $("#dep").val(rdata[0]['科室id']);
+                            $("#badno").val(rdata[0]['床位']);
+
                         } else {
                             layer.open({
                                 content: '该病人信息不存在',
@@ -267,10 +277,19 @@
                 gridview: true,
                 altRows: true,
                 viewrecords: true,
-                colNames: ['id', '序号', '姓名', '性别','年龄', '编码', '身份证号', '联系方式', '科室', '床位', '入院时间', '联系地址', '婚姻状况', '户籍地址', '工作单位'],
+                colNames: ['ID', '序号', '标识', '姓名', '性别', '年龄', '编码', '身份证号', '联系方式', '科室', '床位', '入院时间', '联系地址', '婚姻状况', '户籍地址', '工作单位', '科室Id'],
                 colModel: [
-                    { name: 'id', index: 'id', hidden: true },
+                    { name: 'ID', index: 'ID', hidden: true },
                     { name: '序号', index: '序号', width: 40, align: 'center' },
+                    {
+                        name: '标识', index: '标识', width: 60, formatter: function (cellvalue, options, rowObject) {
+                            if (cellvalue=="1") {
+                                return "<span style='color:red'>已出院</span>";
+                            } else {
+                                return "<span style='color:green'>在院</span>";
+                            }
+                        }
+                    },
                     { name: '姓名', index: '姓名', classes: "text-align:center" },
                     {
                         name: '性别', index: '性别', formatter: function (cellvalue, options, rowObject) {
@@ -292,7 +311,8 @@
                     { name: '联系地址', index: '联系地址', hidden: true },
                     { name: '婚姻状况', index: '婚姻状况', hidden: true },
                     { name: '户籍地址', index: '户籍地址', hidden: true },
-                    { name: '工作单位', index: '工作单位', hidden: true }
+                    { name: '工作单位', index: '工作单位', hidden: true },
+                    { name: '科室Id', index: '科室Id', hidden: true }
                 ],
                 jsonReader: {
                     root: "dataList", page: "page", total: "total",
@@ -360,6 +380,7 @@
                 yes: function (index) {
                     var url = "BaseManageHandler.ashx?tag=AddPatientInfo";
                     var data = comFn.getFromVal();
+                    data.depName = $("#dep").find("option:selected").text();
                     data.state = "1";
                     if (save(url, data)) {
                         layer.open({
@@ -386,14 +407,8 @@
                     } else {
                         $(".text-show").css({ "width": "45%" });
                     }
+                    getDepSelect();
 
-                    comFn.Ajax("BaseManageHandler.ashx?tag=GetDepartmentList", null, function (sdata) {
-                        debugger;
-                        $("#dep").append("option")
-                    }, function () {
-
-                    }, false);
-                    
                     laydate.render({
                         elem: '#inTime',
                         type: 'datetime',
@@ -409,15 +424,26 @@
             });
         }
 
-        function Del() {
+        function getDepSelect() {
+            comFn.Ajax("BaseManageHandler.ashx?tag=GetDepList", null, function (sdata) {
+                for (var i = 0; i < sdata.length; i++) {
+                    $("#dep").append("<option value='" + sdata[i]["编码"] + "'>" + sdata[i]["名称"] + "</option>");
+                }
+            }, function () {
+
+            }, false);
+        }
+
+        function Del(state,tip) {
             var rowId = $('#jDataGrid').jqGrid('getGridParam', 'selrow');
             if (rowId) {
                 layer.open({
-                    content: '您确定要删除该数据吗？'
+                    content: tip
                 , btn: ['确定', '取消']
                 , yes: function (index) {
                     var url = "BaseManageHandler.ashx?tag=DelPatient";
-                    var data = { Id: rowId };
+                    var rowData = $('#jDataGrid').jqGrid('getRowData', rowId);
+                    var data = { Id: rowData.ID, state: state };
                     save(url, data);
                     layer.close(index);
                     queryFunc(pageIndex, pageSize);
@@ -446,7 +472,10 @@
                     yes: function (index) {
                         var url = "BaseManageHandler.ashx?tag=AddPatientInfo";
                         var data = comFn.getFromVal();
-                        data.Id = rowId;
+                        var rowData = $('#jDataGrid').jqGrid('getRowData', rowId);
+                        data.depName = $("#dep").find("option:selected").text();
+                        debugger
+                        data.Id = rowData.ID;
                         data.state = "2";
                         if (save(url, data)) {
                             layer.open({
@@ -474,7 +503,7 @@
                             $(".text-show").css({ "width": "45%" });
                         }
                         document.getElementById("code").disabled = true;
-
+                        getDepSelect();
                         laydate.render({
                             elem: '#inTime',
                             type: 'datetime',
@@ -502,6 +531,8 @@
                         $("#nowaddress").val(rowData['联系地址']);
                         $("#work").val(rowData['工作单位']);
                         $("#address").val(rowData['户籍地址']);
+                        $("#dep").val(rowData['科室Id']);
+                        $("#badno").val(rowData['床位']);
                     }
                 });
             } else {
@@ -526,6 +557,20 @@
                 result = false;
             }, false);
             return result;
+        }
+
+        function Assess(state) {
+            if (state=="1") {
+
+            } else if (state == "2") {
+
+            } else if (state == "3") {
+
+            } else if (state == "4") {
+
+            } else if (state == "5") {
+
+            }
         }
 
     </script>

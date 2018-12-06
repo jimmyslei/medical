@@ -33,6 +33,12 @@ namespace Medical.Logic
         #endregion
 
         #region 科室
+
+        public DataTable GetDepList()
+        {
+            return service.GetDepList();
+        }
+
         public DataTable GetDepartmentList(int pageIndex, int pageSize)
         {
             int startRow = 0, endRow = 0;
@@ -125,9 +131,9 @@ namespace Medical.Logic
             return service.AddPatientInfo(patien, state);
         }
 
-        public string DelPatient(int Id)
+        public string DelPatient(int Id, int state)
         {
-            return service.DelPatient(Id);
+            return service.DelPatient(Id, state);
         }
 
         #endregion

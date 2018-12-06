@@ -162,9 +162,9 @@
                 gridview: true,
                 altRows: true,
                 viewrecords: true,
-                colNames: ['id', '序号', '名称', '编码', '描述'],
+                colNames: ['Id', '序号', '名称', '编码', '描述'],
                 colModel: [
-                    { name: 'id', index: 'id', hidden: true },
+                    { name: 'Id', index: 'Id', hidden: true },
                     { name: '序号', index: '序号', width: 40, align: 'center' },
                     { name: '名称', index: '名称', classes: "text-align:center" },
                     { name: '编码', index: '编码'},
@@ -178,7 +178,6 @@
 
                 },
                 loadComplete: function (data) {
-                    
                 },
                 onPaging: function (pageBtn) {
                     var re_page = $(this).getGridParam('page');//获取返回的当前页
@@ -267,7 +266,8 @@
                 },
                 yes: function (index) {
                     var data = comFn.getFromVal();
-                    data.Id = Id;
+                    var rowData = $('#jDataGrid').jqGrid('getRowData', Id);
+                    data.Id = rowData.Id;
                     data.state = state;
                     if (save(url, data)) {
                         layer.open({
@@ -297,7 +297,8 @@
                 , btn: ['确定', '取消']
                 , yes: function (index) {
                     var url = "BaseManageHandler.ashx?tag=EditDepartment";
-                    var data = { state: -1, Id: rowId };
+                    var rowData = $('#jDataGrid').jqGrid('getRowData', rowId);
+                    var data = { state: -1, Id: rowData.Id };
                     if (save(url, data)) {
                         layer.open({
                             content: '删除成功',

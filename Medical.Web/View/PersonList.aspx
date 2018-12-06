@@ -122,11 +122,10 @@
 
             $("#exitLogin").click(function () {
                 delCookie("Home_UserName");
-                window.location.href = "Login.html";
+                window.location.href = "../Login";
             });
 
             $("#updatePwd").click(function () {
-                debugger
                 var html = $("#update").val();
                 layer.open({
                     content: html,
@@ -183,9 +182,9 @@
                 altRows: true,
                 userdata: 'userdata',
                 viewrecords: true,
-                colNames: ['id', '序号', '姓名', '编码', '性别', '身份证号', '联系电话', '出生日期', '住址'],
+                colNames: ['ID', '序号', '姓名', '编码', '性别', '身份证号', '联系电话', '出生日期', '住址'],
                 colModel: [
-                    { name: 'id', index: 'id', hidden: true },
+                    { name: 'ID', index: 'ID', hidden: true },
                     { name: '序号', index: '序号', width: 40, align: 'center' },
                     { name: '姓名', index: '姓名' },
                     { name: '编码', index: '编码' },
@@ -209,7 +208,6 @@
                     records: "totalCount", repeatitems: false, id: "id"
                 },
                 loadComplete: function (data) {
-
                 },
                 onPaging: function (pageBtn) {
                     var re_page = $(this).getGridParam('page');//获取返回的当前页
@@ -266,6 +264,7 @@
                 commAlert(addhtml, url, "0");
             } else if (state == "1") {
                 var rowId = $('#jDataGrid').jqGrid('getGridParam', 'selrow');
+                
                 if (rowId) {
                     Id = rowId;
                     commAlert(addhtml, url, "1");
@@ -321,13 +320,14 @@
                         $("#birth").val(rowData['出生日期']);
                         $("#phone").val(rowData['联系方式']);
                         $("#code").val(rowData['编码']);
-                        $("#address").val(rowData['地址']);
+                        $("#address").val(rowData['住址']);
                     }
 
                 },
                 yes: function (index) {
                     var data = comFn.getFromVal();
-                    data.Id = Id;
+                    var rowData = $('#jDataGrid').jqGrid('getRowData', Id);
+                    data.Id = rowData.ID;
                     data.state = state;
                     if (save(url, data)) {
                         layer.open({
@@ -357,7 +357,8 @@
                 , btn: ['确定', '取消']
                 , yes: function (index) {
                     var url = "BaseManageHandler.ashx?tag=EditPerson";
-                    var data = { state: -1, Id: rowId };
+                    var rowData = $('#jDataGrid').jqGrid('getRowData', rowId);
+                    var data = { state: -1, Id: rowData.ID };
                     if (save(url, data)) {
                         layer.open({
                             content: '删除成功',
