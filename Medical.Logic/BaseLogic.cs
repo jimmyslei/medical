@@ -14,7 +14,7 @@ namespace Medical.Logic
         BaseService service = new BaseService();
 
         #region 登录
-        public string Login(PersonModel person,int state)
+        public string Login(PersonModel person, int state)
         {
             return service.Login(person, state);
         }
@@ -52,7 +52,7 @@ namespace Medical.Logic
             return service.GetDepTotal();
         }
 
-        public string EditDepartment(DepartmentModel dep,int state)
+        public string EditDepartment(DepartmentModel dep, int state)
         {
             return service.EditDepartment(dep, state);
         }
@@ -121,6 +121,11 @@ namespace Medical.Logic
             return service.GetPatientList(startRow, endRow);
         }
 
+        public DataTable GetPatInfoById(int Id)
+        {
+            return service.GetPatInfoById(Id);
+        }
+
         public string GetPatientCount()
         {
             return service.GetPatientCount();
@@ -137,6 +142,13 @@ namespace Medical.Logic
         }
 
         #endregion
+
+        #region 评估
+        public string EditAssess(int patId, string assItem, int assType, double score, int rank)
+        {
+            return service.EditAssess(patId, assItem, assType, score, rank);
+        }
+        #endregion
+
     }
 }
- 

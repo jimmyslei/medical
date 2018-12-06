@@ -26,20 +26,22 @@
         }
     </style>
     <script>
+        var paintId;
         $(function () {
+            paintId = comFn.getQueryString("id");
             $(".username").text(getCookie("Home_UserName"));
             var state = getCookie("state");
             if (state == "2") {
                 $("#baseLi").hide();
+                $("#updatePwd").hide();
             }
 
             $("#exitLogin").click(function () {
                 delCookie("Home_UserName");
-                window.location.href = "Login.html";
+                window.location.href = "../Login";
             });
 
             $("#updatePwd").click(function () {
-                debugger
                 var html = $("#update").val();
                 layer.open({
                     content: html,
@@ -49,6 +51,7 @@
                     yes: function (index) {
                         var url = "BaseManageHandler.ashx?tag=UpdatePwd";
                         var data = comFn.getFromVal();
+                        data.userName = $("#userName").val();
                         if (data.pwdok != data.pwd) {
                             layer.open({
                                 content: '确认密码与新密码不同',
@@ -75,12 +78,61 @@
                         }
                     },
                     success: function (elem) {
-
+                        $("#userName").val(getCookie("Home_UserName"));
                     }
                 });
             });
-
         });
+
+        function Save() {
+            var url = "BaseManageHandler.ashx?tag=EditAssess";
+
+            var score = 0;
+            $.each($('input:checkbox:checked'), function () {
+                score += parseInt($(this).val());
+            });
+
+            var rank, tips = '';
+            if (score >= 1 && score <= 3) {
+                rank = 2;
+                tips = '该病人当前处于 低风险 状态，请每周评估一次';
+            } else if (score >= 4 && score <= 6) {
+                rank = 3;
+                tips = '该病人当前处于 中风险 状态，请每周评估两次';
+            } else if (score >= 7) {
+                rank = 4;
+                tips = '该病人当前处于 高风险 状态，请每24小时评估一次';
+            }
+
+            var data = {};
+            data.patId = paintId;
+            data.assItem = "非计划性拔管评估";
+            data.assType = 5;
+            data.score = score;
+            data.rank = rank;
+
+            comFn.Ajax(url, data, function (sdata) {
+                if (sdata == "1") {
+                    layer.open({
+                        content: tips,
+                        btn: ['确定'],
+                        yes: function (index) {
+                            layer.close(index);
+                        }
+                    });
+                }
+                else {
+                    layer.open({
+                        content: '评估失败',
+                        skin: 'msg',
+                        time: 2
+                    });
+                }
+            }, function () {
+
+            }, false);
+        }
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -95,14 +147,14 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="summary-inline">
+                            <%--<div class="summary-inline">
                                 <span class="text-info">住院号:02120180124</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span class="text-info">姓名:杨丽莎</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span class="text-info">性别:女</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span class="text-info">年龄:32</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span class="text-info">科室:妇产科</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span class="text-info">床号:23号床</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            </div>
+                            </div>--%>
                             <div class="sub-title">年龄</div>
                             <div>
                                 <div class="checkbox3 checkbox-success <%--checkbox-inline--%> checkbox-check checkbox-round  checkbox-light">
@@ -239,7 +291,7 @@
                                 </div>
                             </div>
                             <div style="padding: 10px;">
-                                <button type="button" onclick="" class="btn btn-primary btn-lg btn-block">提交</button>
+                                <button type="button" onclick="Save()" class="btn btn-primary btn-lg btn-block">提交</button>
                             </div>
                         </div>
                     </div>

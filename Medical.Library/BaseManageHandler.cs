@@ -57,11 +57,17 @@ namespace Medical.Library
                     case "GetPatientList":
                         rstr = GetPatientList(context);
                         break;
+                    case "GetPatInfoById":
+                        rstr = GetPatInfoById(context);
+                        break;
                     case "AddPatientInfo":
                         rstr = AddPatientInfo(context);
                         break;
                     case "DelPatient":
                         rstr = DelPatient(context);
+                        break;
+                    case "EditAssess":
+                        rstr = EditAssess(context);
                         break;
                     default:
                         rstr = "tag方法未在定义范围内！";
@@ -98,17 +104,17 @@ namespace Medical.Library
             PersonModel person = new PersonModel();
             person.UserName = userName;
             person.Pwd = pwd;
-            
+
             return bases.Login(person, state);
         }
-        
+
         private string UpdatePwd(HttpContext context)
         {
             var userName = context.Request["userName"];
             var pwd = context.Request["pwd"];
             var pwdok = context.Request["pwdok"];
 
-            if (pwd!= pwdok)
+            if (pwd != pwdok)
             {
                 return "确认密码与新密码不同";
             }
@@ -119,7 +125,7 @@ namespace Medical.Library
 
         private string GetDepList(HttpContext context)
         {
-            return  bases.GetDepList().ToJson();
+            return bases.GetDepList().ToJson();
         }
 
         private string GetDepartmentList(HttpContext context)
@@ -260,6 +266,12 @@ namespace Medical.Library
                   "\"total\":" + pageCount + "}";
         }
 
+        private string GetPatInfoById(HttpContext context)
+        {
+            var Id = Convert.ToInt32(context.Request["Id"]);
+            return bases.GetPatInfoById(Id).ToJson();
+        }
+
         private string AddPatientInfo(HttpContext context)
         {
             var state = Convert.ToInt32(context.Request["state"]);
@@ -269,7 +281,7 @@ namespace Medical.Library
             var code = context.Request["code"];
             var phone = context.Request["phone"];
             var cardId = context.Request["cardId"];
-            var age = context.Request["age"] == "" ? null: context.Request["age"];
+            var age = context.Request["age"] == "" ? null : context.Request["age"];
             var work = context.Request["work"];
             var inTime = context.Request["inTime"];
             var nowAddress = context.Request["nowAddress"];
@@ -287,7 +299,7 @@ namespace Medical.Library
             patien.Phone = phone;
             patien.CardId = cardId;
             patien.Age = Convert.ToInt32(age);
-            patien.InTime= Convert.ToDateTime(inTime);
+            patien.InTime = Convert.ToDateTime(inTime);
             patien.NowAddress = nowAddress;
             patien.Address = address;
             patien.Marry = Convert.ToInt32(marry);
@@ -301,10 +313,21 @@ namespace Medical.Library
 
         private string DelPatient(HttpContext context)
         {
-            var Id =Convert.ToInt32(context.Request["Id"]);
+            var Id = Convert.ToInt32(context.Request["Id"]);
             var state = Convert.ToInt32(context.Request["state"]);
             return bases.DelPatient(Id, state);
-        }  
+        }
+
+        private string EditAssess(HttpContext context)
+        {
+            var patId = context.Request["patId"];
+            var assItem = context.Request["assItem"];
+            var assType = context.Request["assType"];
+            var score = context.Request["score"];
+            var rank = context.Request["rank"];
+
+            return bases.EditAssess(Convert.ToInt32(patId),assItem,Convert.ToInt32(assType), Convert.ToDouble(score), Convert.ToInt32(rank));
+        }
 
     }
 }

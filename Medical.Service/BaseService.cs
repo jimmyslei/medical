@@ -327,6 +327,41 @@ namespace Medical.Service
             }
         }
 
+        public DataTable GetPatInfoById(int Id)
+        {
+            string sql = @"select [ID]
+                  ,[姓名]
+                  ,[性别]
+                  ,[编码]
+                  ,[年龄]
+                  ,[身份证号]
+                  ,[联系方式]
+                  ,[联系地址]
+                  ,[婚姻状况]
+                  ,[户籍地址]
+                  ,[工作单位]
+                  ,CONVERT(varchar(60), 登记时间, 20) 登记时间
+                  ,[科室]
+                  ,[科室Id]
+                  ,[床位]
+                  ,[标识],ROW_NUMBER() over(order by ID) as 序号
+                from 病人信息表 where Id=@Id";
+
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@Id",Id){SqlDbType=SqlDbType.Int}
+            };
+
+            DataTable dt = ser.GetDataSet(sql, CommandType.Text, parmeter).Tables[0];
+            if (dt != null)
+            {
+                return dt;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public string GetPatientCount()
         {
             string sql = "select count(1) from 病人信息表 where 标识!=-1";
@@ -409,6 +444,29 @@ namespace Medical.Service
 
             SqlParameter[] parmeter = new SqlParameter[] {
                 new SqlParameter("@Id",Id){SqlDbType=SqlDbType.Int}
+            };
+
+            return ser.ExecuteNonquery(sql, CommandType.Text, parmeter).ToString();
+        }
+
+        #endregion
+
+        #region 评估
+        public string EditAssess(int patId, string assItem, int assType, double score, int rank)
+        {
+            string sql = @"insert into 评估记录表(病人Id
+                          ,[评估项目]
+                          ,[评估类别]
+                          ,[评估总分]
+                          ,[评估日期]
+                          ,等级) values(@painId,@asseItem,@asseType,@score,@time,@rank)";
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@painId",patId){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@asseItem",assItem){SqlDbType=SqlDbType.NVarChar},
+                new SqlParameter("@asseType",assType){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@score",score){SqlDbType=SqlDbType.Float},
+                new SqlParameter("@time",DateTime.Now){SqlDbType=SqlDbType.DateTime},
+                new SqlParameter("@rank",rank){SqlDbType=SqlDbType.Int}
             };
 
             return ser.ExecuteNonquery(sql, CommandType.Text, parmeter).ToString();

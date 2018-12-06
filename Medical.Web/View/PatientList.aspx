@@ -59,7 +59,7 @@
                                             <ul class="dropdown-menu" role="menu">
                                                 <li><a href="#" onclick="Assess(1)">疼痛评估</a></li>
                                                 <li><a href="#" onclick="Assess(2)">跌倒评估</a></li>
-                                                <li><a href="#" onclick="Assess(3)">压疮评估</a></li>
+                                                <li><a href="#" onclick="Assess(3)">Braden压疮评估</a></li>
                                                 <li><a href="#" onclick="Assess(4)">VTE评估</a></li>
                                                 <li><a href="#" onclick="Assess(5)">非计划拔管评估</a></li>
                                             </ul>
@@ -164,6 +164,7 @@
             var state = getCookie("state");
             if (state == "2") {
                 $("#baseLi").hide();
+                $("#updatePwd").hide();
             }
 
             Number.prototype.zeroPadding = function () {
@@ -186,6 +187,7 @@
                     yes: function (index) {
                         var url = "BaseManageHandler.ashx?tag=UpdatePwd";
                         var data = comFn.getFromVal();
+                        data.userName = $("#userName").val();
                         if (data.pwdok != data.pwd) {
                             layer.open({
                                 content: '确认密码与新密码不同',
@@ -212,7 +214,7 @@
                         }
                     },
                     success: function (elem) {
-
+                        $("#userName").val(getCookie("Home_UserName"));
                     }
                 });
             });
@@ -560,16 +562,26 @@
         }
 
         function Assess(state) {
-            if (state=="1") {
-
-            } else if (state == "2") {
-
-            } else if (state == "3") {
-
-            } else if (state == "4") {
-
-            } else if (state == "5") {
-
+            var rowId = $('#jDataGrid').jqGrid('getGridParam', 'selrow');
+            if (rowId) {
+                var rowData = $('#jDataGrid').jqGrid('getRowData', rowId);
+                if (state == "1") {
+                    window.location.href = "PainAssessScale.aspx?id=" + rowData.ID;
+                } else if (state == "2") {
+                    window.location.href = "MorseScale.aspx?id=" + rowData.ID;
+                } else if (state == "3") {
+                    window.location.href = "BradenScale.aspx?id=" + rowData.ID;
+                } else if (state == "4") {
+                    window.location.href = "VTEScale.aspx?id=" + rowData.ID;
+                } else if (state == "5") {
+                    window.location.href = "UEXScale.aspx?id=" + rowData.ID;
+                }
+            } else {
+                layer.open({
+                    content: '请选择要评估的病人'
+                    , skin: 'msg'
+                    , time: 2
+                });
             }
         }
 

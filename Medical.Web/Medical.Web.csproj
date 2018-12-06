@@ -459,7 +459,6 @@
     <Content Include="View\PainAssScale.aspx" />
     <Content Include="View\PatientList.aspx" />
     <Content Include="View\PersonList.aspx" />
-    <Content Include="View\test.html" />
     <Content Include="View\UEXScale.aspx" />
     <Content Include="View\VTEScale.aspx" />
     <Content Include="Web.config" />

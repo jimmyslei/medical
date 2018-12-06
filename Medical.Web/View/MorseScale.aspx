@@ -26,16 +26,19 @@
         }
     </style>
     <script>
+        var paintId;
         $(function () {
+            paintId = comFn.getQueryString("id");
             $(".username").text(getCookie("Home_UserName"));
             var state = getCookie("state");
             if (state == "2") {
                 $("#baseLi").hide();
+                $("#updatePwd").hide();
             }
 
             $("#exitLogin").click(function () {
                 delCookie("Home_UserName");
-                window.location.href = "Login.html";
+                window.location.href = "../Login";
             });
 
             $("#updatePwd").click(function () {
@@ -48,6 +51,7 @@
                     yes: function (index) {
                         var url = "BaseManageHandler.ashx?tag=UpdatePwd";
                         var data = comFn.getFromVal();
+                        data.userName = $("#userName").val();
                         if (data.pwdok != data.pwd) {
                             layer.open({
                                 content: '确认密码与新密码不同',
@@ -74,11 +78,60 @@
                         }
                     },
                     success: function (elem) {
-
+                        $("#userName").val(getCookie("Home_UserName"));
                     }
                 });
             });
         })
+
+        function Save() {
+            var url = "BaseManageHandler.ashx?tag=EditAssess";
+
+            var score = 0;
+            $.each($("input[type=radio]:checked"), function () {
+                score += parseInt($(this).val());
+            });
+            var rank, tips = '';
+            if (score >= 0 && score <= 24) {
+                rank = 1;
+                tips = '该病人当前处于 无风险 状态';
+            } else if (score >= 25 && score <= 44) {
+                rank = 2;
+                tips = '该病人当前处于 低风险 状态，请每周评估一次';
+            } else if (score >= 45) {
+                rank = 4;
+                tips = '该病人当前处于 高风险 状态，请每日评估一次';
+            } 
+
+            var data = {};
+            data.patId = paintId;
+            data.assItem = "Morse跌倒评估";
+            data.assType = 3;
+            data.score = score;
+            data.rank = rank;
+
+            comFn.Ajax(url, data, function (sdata) {
+                if (sdata == "1") {
+                    layer.open({
+                        content: tips,
+                        btn: ['确定'],
+                        yes: function (index) {
+                            layer.close(index);
+                        }
+                    });
+                }
+                else {
+                    layer.open({
+                        content: '评估失败',
+                        skin: 'msg',
+                        time: 2
+                    });
+                }
+            }, function () {
+
+            }, false);
+        }
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -93,24 +146,24 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="summary-inline">
+                            <%--<div class="summary-inline">
                                 <span class="text-info">住院号:02120180124</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span class="text-info">姓名:杨丽莎</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span class="text-info">性别:女</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span class="text-info">年龄:32</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span class="text-info">科室:妇产科</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <span class="text-info">床号:23号床</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            </div>
+                            </div>--%>
                             <div class="sub-title">近三个月有无跌倒</div>
                             <div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio0" name="radio" value="0">
+                                    <input type="radio" id="radio0" name="radio1" value="0">
                                     <label for="radio0">
                                         无
                                     </label>
                                 </div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio1" name="radio" value="25">
+                                    <input type="radio" id="radio1" name="radio1" value="25">
                                     <label for="radio1">
                                         有
                                     </label>
@@ -119,13 +172,13 @@
                             <div class="sub-title">多于一个疾病诊断</div>
                             <div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio-0" name="radio" value="0">
+                                    <input type="radio" id="radio-0" name="radio2" value="0">
                                     <label for="radio-0">
                                         无
                                     </label>
                                 </div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio-1" name="radio" value="15">
+                                    <input type="radio" id="radio-1" name="radio2" value="15">
                                     <label for="radio-1">
                                         有
                                     </label>
@@ -134,19 +187,19 @@
                             <div class="sub-title">使用行走辅助工具</div>
                             <div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio-no-0" name="radio" value="0">
+                                    <input type="radio" id="radio-no-0" name="radio3" value="0">
                                     <label for="radio-no-0">
                                         不需要，卧床休息，护士辅助
                                     </label>
                                 </div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio-yes-1" name="radio" value="15">
+                                    <input type="radio" id="radio-yes-1" name="radio3" value="15">
                                     <label for="radio-yes-1">
                                         拐杖、助行器、手杖
                                     </label>
                                 </div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio-yes-2" name="radio" value="30">
+                                    <input type="radio" id="radio-yes-2" name="radio3" value="30">
                                     <label for="radio-yes-2">
                                         依扶家具行走
                                     </label>
@@ -155,13 +208,13 @@
                             <div class="sub-title">是否需要静脉输液</div>
                             <div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio-no" name="radio" value="0">
+                                    <input type="radio" id="radio-no" name="radio4" value="0">
                                     <label for="radio-no">
                                         否
                                     </label>
                                 </div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio-yes" name="radio" value="20">
+                                    <input type="radio" id="radio-yes" name="radio4" value="20">
                                     <label for="radio-yes">
                                         是
                                     </label>
@@ -170,19 +223,19 @@
                             <div class="sub-title">步态</div>
                             <div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio-b-1" name="radio" value="0">
+                                    <input type="radio" id="radio-b-1" name="radio5" value="0">
                                     <label for="radio-b-1">
                                         正常、卧床不能够移动
                                     </label>
                                 </div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio-b-2" name="radio" value="10">
+                                    <input type="radio" id="radio-b-2" name="radio5" value="10">
                                     <label for="radio-b-2">
                                         虚弱无力
                                     </label>
                                 </div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio-b-3" name="radio" value="20">
+                                    <input type="radio" id="radio-b-3" name="radio5" value="20">
                                     <label for="radio-b-3">
                                         功能障碍
                                     </label>
@@ -191,20 +244,20 @@
                             <div class="sub-title">认知状态</div>
                             <div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio-z-1" name="radio" value="0">
+                                    <input type="radio" id="radio-z-1" name="radio6" value="0">
                                     <label for="radio-z-1">
                                         量力而行
                                     </label>
                                 </div>
                                 <div class="radio3 radio-check radio-success">
-                                    <input type="radio" id="radio-z-2" name="radio" value="15">
+                                    <input type="radio" id="radio-z-2" name="radio6" value="15">
                                     <label for="radio-z-2">
                                         高估自己能力、忘记自己受限制
                                     </label>
                                 </div>
                             </div>
                             <div style="padding: 10px;">
-                                <button type="button" onclick="" class="btn btn-primary btn-lg btn-block">提交</button>
+                                <button type="button" onclick="Save()" class="btn btn-primary btn-lg btn-block">提交</button>
                             </div>
                         </div>
                     </div>

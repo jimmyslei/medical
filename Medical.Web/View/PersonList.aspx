@@ -118,6 +118,7 @@
             var state = getCookie("state");
             if (state == "2") {
                 $("#baseLi").hide();
+                $("#updatePwd").hide();
             }
 
             $("#exitLogin").click(function () {
@@ -135,6 +136,7 @@
                     yes: function (index) {
                         var url = "BaseManageHandler.ashx?tag=UpdatePwd";
                         var data = comFn.getFromVal();
+                        data.userName = $("#userName").val();
                         if (data.pwdok != data.pwd) {
                             layer.open({
                                 content: '确认密码与新密码不同',
@@ -161,7 +163,7 @@
                         }
                     },
                     success: function (elem) {
-
+                        $("#userName").val(getCookie("Home_UserName"));
                     }
                 });
             });

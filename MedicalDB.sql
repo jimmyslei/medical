@@ -145,8 +145,8 @@ create table 评估记录表
    病人Id					varchar(36)					null,
    评估项目                nvarchar(500)                            null,
    评估类别					int						null,
-   评估总分                 int                            null,
-   评估日期                 date                           null,
+   评估总分                 float                            null,
+   评估日期                 datetime                           null,
    等级						int								null,
    constraint PK_评估表评分记录表 primary key clustered (ID)
 );
