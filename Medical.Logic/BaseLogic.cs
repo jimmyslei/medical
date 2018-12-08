@@ -112,6 +112,10 @@ namespace Medical.Logic
             return service.GetHisPatienInfoByCode(code);
         }
 
+        public DataTable GetPatiens()
+        {
+            return service.GetPatiens();
+        }
 
         public DataTable GetPatientList(int pageIndex, int pageSize)
         {
@@ -148,6 +152,20 @@ namespace Medical.Logic
         {
             return service.EditAssess(patId, assItem, assType, score, rank);
         }
+
+        public DataTable GetAssess(int pageIndex, int pageSize, int type, int rank)
+        {
+            int startRow = 0, endRow = 0;
+            startRow = (pageIndex - 1) * pageSize + 1;
+            endRow = pageIndex * pageSize;
+            return service.GetAssess(startRow, endRow, type, rank);
+        }
+
+        public string GetAssesTotal(int type, int rank)
+        {
+            return service.GetAssesTotal(type, rank);
+        }
+
         #endregion
 
     }

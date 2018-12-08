@@ -54,6 +54,9 @@ namespace Medical.Library
                     case "GetHisPatienInfoByCode":
                         rstr = GetHisPatienInfoByCode(context);
                         break;
+                    case "GetPatiens":
+                        rstr = GetPatiens(context);
+                        break;
                     case "GetPatientList":
                         rstr = GetPatientList(context);
                         break;
@@ -68,6 +71,9 @@ namespace Medical.Library
                         break;
                     case "EditAssess":
                         rstr = EditAssess(context);
+                        break;
+                    case "GetAssess":
+                        rstr = GetAssess(context);
                         break;
                     default:
                         rstr = "tag方法未在定义范围内！";
@@ -244,6 +250,12 @@ namespace Medical.Library
             return result.ToJson();
         }
 
+
+        private string GetPatiens(HttpContext context)
+        {
+            return bases.GetPatiens().ToJson();
+        }
+
         /// <summary>
         /// 获取病人列表
         /// </summary>
@@ -329,5 +341,24 @@ namespace Medical.Library
             return bases.EditAssess(Convert.ToInt32(patId),assItem,Convert.ToInt32(assType), Convert.ToDouble(score), Convert.ToInt32(rank));
         }
 
+        private string GetAssess(HttpContext context)
+        {
+            int pageIndex = !string.IsNullOrEmpty(context.Request["pageIndex"]) ? Convert.ToInt32(context.Request["pageIndex"]) : 0;
+            int pageSize = !string.IsNullOrEmpty(context.Request["pageSize"]) ? Convert.ToInt32(context.Request["pageSize"]) : 0;
+            var type = context.Request["type"];
+            var rank = context.Request["rank"];
+
+            var result = bases.GetAssess(pageIndex, pageSize, Convert.ToInt32(type), Convert.ToInt32(rank));
+
+            var dataJson = result.ToJson();
+            var total = Convert.ToInt32(bases.GetAssesTotal(Convert.ToInt32(type), Convert.ToInt32(rank)));
+            var pageCount = (total % pageSize) == 0 ? (total / pageSize) : (total / pageSize) + 1;
+
+            return "{" + "\"dataList\":" + dataJson + "," +
+                  "\"records\":" + total + "," +
+                  "\"page\":" + pageIndex + "," +
+                  "\"total\":" + pageCount + "}";
+        }
+        
     }
 }

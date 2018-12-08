@@ -25,6 +25,9 @@
             color: white !important;
             background-color: #007DDB !important;
         }
+        .select2-dropdown{
+            z-index:99999999 !important
+        }
     </style>
     <script>
         var paintId;
@@ -35,6 +38,45 @@
             if (state == "2") {
                 $("#baseLi").hide();
                 $("#updatePwd").hide();
+            }
+
+            if (paintId == null) {
+                var html = $("#patin").val();
+                layer.open({
+                    content: html,
+                    shadeClose: false,
+                    btn: ['确定'],
+                    anim: 'up',
+                    yes: function (index) {
+                        paintId = $("#patiens option:selected").val();
+                        layer.close(index);
+                    },
+                    success: function (elem) {
+                        $('#patiens').select2({
+                            placeholder: '--请选择--', //提示
+                            allowClear: false, //不允许清空
+                            multiple: false, 
+                            ajax: {
+                                url: 'BaseManageHandler.ashx?tag=GetPatiens',
+                                dataType: 'json',
+                                data: function (params) {
+                                    
+                                },
+                                delay: 500,
+                                processResults: function (data, params) {
+                                    var list = [];
+                                    for (var i = 0; i < data.length; i++) {
+                                        list.push({ id: data[i].ID, text: data[i]["姓名"] });
+                                    }
+                                    return {
+                                        results: list  //必须赋值给results并且必须返回一个obj
+                                    };
+                                },
+                                cache : true,　　　　　　　　　　//开启缓存
+                            }
+                        });
+                    }
+                });
             }
 
             $("#exitLogin").click(function () {
@@ -91,7 +133,7 @@
             $.each($("input[type=radio]:checked"), function (d) {
                 score += parseInt($(this).val());
             })
-            
+
             var rank, tips = '';
             if (score > 18) {
                 rank = 1;
@@ -146,6 +188,16 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="card">
+                        <textarea id="patin" style="display: none;">
+                             <form id="form" class="form-inline" style="max-height: 350px;overflow:scroll;overflow-x:hidden;">
+                                <div class="form-group text-show">
+                                    <label for="sex">请选择评估的病人</label>
+                                    <select id="patiens" style="width:180px">
+                                        
+                                    </select>
+                                </div>
+                                </form>
+                        </textarea>
                         <div class="card-header">
                             <div class="card-title">
                                 <div class="title" style="color: white; float: left">Braden压疮风险评估量表</div>
@@ -318,7 +370,7 @@
                             </div>
 
                             <!--儿童加一项-->
-                          <%--  <div class="sub-title">组织灌注与养合</div>
+                            <%--  <div class="sub-title">组织灌注与养合</div>
                             <div>
                                 <div class="radio3 radio-check radio-success">
                                     <input type="radio" id="radioz1" name="radio7" value="1">

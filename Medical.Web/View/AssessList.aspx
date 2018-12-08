@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/View/Main.Master" AutoEventWireup="true" Inherits="Medical.Library.View.HisPatienList" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/View/Main.Master" AutoEventWireup="true" Inherits="Medical.Library.View.AssessList" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link href="../css/AdminLTE.min.css" rel="stylesheet" />
@@ -9,20 +9,17 @@
     <link href="../css/config.css" rel="stylesheet" />
 
     <style>
-        .text {
-            width: 90% !important;
-        }
-
-        /*.text-show {
-            width: 45% !important;
-        }*/
-
-        .text-all {
-            width: 95% !important;
-        }
-
         #gbox_jDataGrid, #gview_jDataGrid, #gridPager, .ui-jqgrid-hdiv, .ui-jqgrid-bdiv {
             width: 100% !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered{
+            line-height:25px !important;
+        }
+        .select2-container .select2-selection--single .select2-selection__rendered{
+            padding-left:0px !important;
+        }
+        .flat-blue .table .danger,.flat-blue .table .success,.flat-blue .table .warning,.flat-blue .table .primary{
+            color:white !important;
         }
     </style>
 </asp:Content>
@@ -34,14 +31,36 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">
-                                <div class="title">His病人信息列表</div>
+                                <div class="title">评估风险统计</div>
                             </div>
                         </div>
                         <div class="card-body">
                             <div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        <button type="button" onclick="Add()" class="btn btn-success"><i class="fa fa-barcode"></i>&nbsp;生成条码</button>
+
+                                        <div class="btn-group">
+                                            <span>风险类别</span>
+                                            <select id="type" style="width:180px">
+                                                <option value="1">疼痛评估</option>
+                                                <option value="2">Braden压疮风险评估</option>
+                                                <option value="3">Morse跌倒评估</option>
+                                                <option value="4">VTE评估</option>
+                                                <option value="5">非计划性拔管评估</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="btn-group">
+                                            
+                                            <span>风险等级</span>
+                                            <select id="rank" style="width:130px">
+                                                <option value="1">无风险</option>
+                                                <option value="2">低风险</option>
+                                                <option value="3">中风险</option>
+                                                <option value="4">高风险</option>
+                                                <option value="5">极高风险</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="panel-body">
                                         <div class="col-sm-12">
@@ -53,13 +72,6 @@
                                 </div>
                             </div>
                         </div>
-                        <textarea id="add" style="display: none;">
-                            <form id="form" class="form-inline" style="max-height: 350px;overflow:scroll;overflow-x:hidden;">
-                                <div class="page-title">
-                                    <img class="title" id="code" style="width:200px;height:150px" />
-                                </div>
-                            </form>
-                        </textarea>
                     </div>
                 </div>
             </div>
@@ -72,22 +84,33 @@
     <script src="../js/jqGrid/jquery.jqGrid.min.js"></script>
     <link href="../js/laymobile/layer.css" rel="stylesheet" />
     <script src="../js/laymobile/layer.js"></script>
-    <link href="../js/laydate/theme/default/laydate.css" rel="stylesheet" />
-    <script src="../js/laydate/laydate.js"></script>
     <script src="../js/Common.js"></script>
-    <script src="../js/JsBarcode.all.js"></script>
+    <link href="../lib/css/select2.min.css" rel="stylesheet" />
+    <script src="../lib/js/select2.full.min.js"></script>
+
     <script>
         $.jgrid.defaults.styleUI = 'Bootstrap';
         $.jgrid.defaults.responsive = true;
         var pageIndex = 1, pageSize = 10;
-
-        $(function () {
+        $(function myfunction() {
             $(".username").text(getCookie("Home_UserName"));
             var state = getCookie("state");
             if (state == "2") {
                 $("#baseLi").hide();
                 $("#updatePwd").hide();
             }
+
+
+            //时间比较
+            debugger;
+            var planDate = new Date('2018-02-25 05:30:00');
+            var applyDate = new Date('2018-03-02 12:25:18');
+            
+            if (applyDate > planDate) {
+                alert("预计完成时间不能早于提请日期！");
+                //return false;
+            }
+
 
             Number.prototype.zeroPadding = function () {
                 var ret = "" + this.valueOf();
@@ -141,14 +164,35 @@
                 });
             });
 
-            load();
-        })
+            $("#type").select2({
+                tags: "true",
+                placeholder: "请选择",
+                allowClear: false
+            });
 
+            $("#rank").select2({
+                tags: "true",
+                placeholder: "请选择",
+                allowClear: false
+            });
+
+            $("#type").on("select2:select",function(e){
+                queryFunc(pageIndex, pageSize)
+            })
+            $("#rank").on("select2:select", function (e) {
+                queryFunc(pageIndex, pageSize)
+            })
+
+            load();
+        });
 
         function load() {
+            var type = $("#type option:selected").val();
+            var rank = $("#rank option:selected").val();
+            
             $('#jDataGrid').jqGrid({
-                url: 'BaseManageHandler.ashx?tag=GetHisPatientList',
-                postData: { pageIndex: pageIndex, pageSize: pageSize },
+                url: 'BaseManageHandler.ashx?tag=GetAssess',
+                postData: { pageIndex: pageIndex, pageSize: pageSize, type: type, rank: rank },
                 datatype: 'json',
                 mtype: 'post',
                 autowidth: true,
@@ -157,30 +201,46 @@
                 gridview: true,
                 altRows: true,
                 viewrecords: true,
-                colNames: ['id', '序号', '姓名', '性别', '年龄', '编码', '身份证号', '联系方式', '入院时间', '联系地址', '婚姻状况', '户籍地址', '工作单位'],
+                colNames: ['ID', '序号', '姓名', '评估项目', '评估类别', '评估总分', '等级', '评估日期'],
                 colModel: [
-                    { name: 'id', index: 'id', hidden: true },
+                    { name: 'ID', index: 'ID', hidden: true },
                     { name: '序号', index: '序号', width: 40, align: 'center' },
-                    { name: '姓名', index: '姓名', classes: "text-align:center" },
+                    { name: '姓名', index: '姓名' },
+                    { name: '评估项目', index: '评估项目' },
                     {
-                        name: '性别', index: '性别', formatter: function (cellvalue, options, rowObject) {
+                        name: '评估类别', index: '评估类别', formatter: function (cellvalue, options, rowObject) {
                             if (cellvalue == "1") {
-                                return "男";
-                            }
-                            else if (cellvalue == "0") {
-                                return "女";
+                                return "疼痛评估";
+                            } else if (cellvalue == "2") {
+                                return "Braden压疮风险评估";
+                            } else if (cellvalue == "3") {
+                                return "Morse跌倒评估";
+                            } else if (cellvalue == "4") {
+                                return "VTE评估";
+                            } else if (cellvalue == "5") {
+                                return "非计划性拔管评估";
                             }
                         }
                     },
-                    { name: '年龄', index: '年龄' },
-                    { name: '编码', index: '编码' },
-                    { name: '身份证号', index: '身份证号' },
-                    { name: '联系方式', index: '联系方式' },
-                    { name: '登记时间', index: '登记时间' },
-                    { name: '联系地址', index: '联系地址', hidden: true },
-                    { name: '婚姻状况', index: '婚姻状况', hidden: true },
-                    { name: '户籍地址', index: '户籍地址', hidden: true },
-                    { name: '工作单位', index: '工作单位', hidden: true }
+                    { name: '评估总分', index: '评估总分' },
+                    {
+                        name: '等级', index: '等级', formatter: function (cellvalue, options, rowObject) {
+                            if (cellvalue == "1") {
+                                return "<span class='badge success'>良好</span>";
+                            } else if (cellvalue == "2") {
+                                return "<span class='badge success' style='background-color:#ffe5a2;color:#5d5d5d !important'>低风险</span>";
+                            } else if (cellvalue == "3") {
+                                return "<span class='badge warning'>中风险</span>";
+                            } else if (cellvalue == "4") {
+                                return "<span class='badge danger'>高风险</span>";
+                            } else if (cellvalue == "5") {
+                                return "<span class='badge primary'>极高风险</span>";
+                            }
+
+                        }
+                    },
+                    { name: '评估日期', index: '评估日期' }
+
                 ],
                 jsonReader: {
                     root: "dataList", page: "page", total: "total",
@@ -230,39 +290,15 @@
         //重新加载数据
         function queryFunc(pageIndex, pageSize) {
             pageIndex = pageIndex;
+            var type = $("#type option:selected").val();
+            var rank = $("#rank option:selected").val();
             //加载数据：
             $("#jDataGrid").jqGrid('setGridParam', {
-                url: "BaseManageHandler.ashx?tag=GetHisPatientList",
-                postData: { pageIndex: pageIndex, pageSize: pageSize },
+                url: "BaseManageHandler.ashx?tag=GetAssess",
+                postData: { pageIndex: pageIndex, pageSize: pageSize, type: type, rank: rank },
             }).trigger("reloadGrid");
         }
 
-        function Add() {
-            var addhtml = $("#add").val();
-            var rowId = $('#jDataGrid').jqGrid('getGridParam', 'selrow');
-
-            if (rowId) {
-                layer.open({
-                    content: addhtml,
-                    shadeClose: true,
-                    btn: ['关闭'],
-                    anim: 'up',
-                    yes: function (index) {
-                        layer.close(index);
-                    },
-                    success: function (elem) {
-                        var rowData = $('#jDataGrid').jqGrid('getRowData', rowId);
-                        JsBarcode("#code", rowData["编码"]);
-                    }
-                });
-            } else {
-                layer.open({
-                    content: '请选择一行数据'
-                    , skin: 'msg'
-                    , time: 2
-                });
-            }
-        }
 
     </script>
 

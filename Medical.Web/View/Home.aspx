@@ -7,17 +7,61 @@
     <script src="../js/Common.js"></script>
     <link href="../js/laymobile/layer.css" rel="stylesheet" />
     <script src="../js/laymobile/layer.js"></script>
+    <script src="../js/echarts.min.js"></script>
     <script>
 
         $(function () {
             var state = comFn.getQueryString("state");
             $(".username").text(getCookie("Home_UserName"));
-            
+
             setCookie("state", state, 30);
             if (state == "2") {
                 $("#baseLi").hide();
                 $("#updatePwd").hide();
             }
+
+            var myChart = echarts.init(document.getElementById('chart'));
+            option = {
+                //title: {
+                //    text: '折线图堆叠'
+                //},
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['邮件营销'],
+                    align: 'left',
+                    left: 30
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                //toolbox: {
+                //    feature: {
+                //        saveAsImage: {}
+                //    }
+                //},
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: '邮件营销',
+                        type: 'line',
+                        stack: '总量',
+                        data: [120, 132, 101, 134, 90, 230, 210]
+                    }
+                ]
+            };
+            myChart.setOption(option);
 
             $("#exitLogin").click(function () {
                 delCookie("Home_UserName");
@@ -215,12 +259,12 @@
                     <div class="card card-success">
                         <div class="card-header">
                             <div class="card-title">
-                                <div class="title"><i class="fa fa-comments-o"></i>Last Message</div>
+                                <div class="title"><i class="fa fa-comments-o"></i>图表</div>
                             </div>
                             <div class="clear-both"></div>
                         </div>
-                        <div class="card-body no-padding">
-                            <ul class="message-list">
+                        <div class="card-body no-padding" id="chart" style="height: 250px">
+                            <%-- <ul class="message-list">
                                 <a href="#">
                                     <li>
                                         <img src="../img/profile/profile-1.jpg" class="profile-img pull-left">
@@ -265,12 +309,7 @@
                                         </div>
                                     </li>
                                 </a>
-                                <%-- <a href="#" id="message-load-more">
-                                    <li class="text-center load-more">
-                                        <i class="fa fa-refresh"></i>load more..
-                                    </li>
-                                </a>--%>
-                            </ul>
+                            </ul>--%>
                         </div>
                     </div>
                 </div>

@@ -291,6 +291,39 @@ namespace Medical.Service
             }
         }
 
+
+        public DataTable GetPatiens()
+        {
+            string sql = @" select [ID]
+                  ,[姓名]
+                  ,[性别]
+                  ,[编码]
+                  ,[年龄]
+                  ,[身份证号]
+                  ,[联系方式]
+                  ,[联系地址]
+                  ,[婚姻状况]
+                  ,[户籍地址]
+                  ,[工作单位]
+                  ,CONVERT(varchar(60), 登记时间, 20) 登记时间
+                  ,[科室]
+                  ,[科室Id]
+                  ,[床位]
+                  ,[标识],ROW_NUMBER() over(order by ID) as 序号
+                from 病人信息表 where 标识=0";
+            SqlParameter[] parmeter = new SqlParameter[] { };
+
+            DataTable dt = ser.GetDataSet(sql, CommandType.Text, parmeter).Tables[0];
+            if (dt != null)
+            {
+                return dt;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public DataTable GetPatientList(int beginRow, int endRow)
         {
             string sql = @"select * from(
@@ -470,6 +503,47 @@ namespace Medical.Service
             };
 
             return ser.ExecuteNonquery(sql, CommandType.Text, parmeter).ToString();
+        }
+
+        public DataTable GetAssess(int beginRow, int endRow,int type,int rank)
+        {
+            string sql = @"select * from(
+                select a.ID
+                ,p.姓名
+                ,[评估项目]
+                ,[评估类别]
+                ,[评估总分]
+                ,CONVERT(varchar(60), 评估日期, 20) 评估日期
+                ,[等级]
+                ,ROW_NUMBER() over(order by a.id) as 序号 
+                from 评估记录表 a,病人信息表 p where a.病人Id=p.ID and 评估类别=@type and 等级=@rank) a where a.序号 between @beginRow and @endRow";
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@type",type){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@rank",rank){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@beginRow",beginRow){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@endRow",endRow){SqlDbType=SqlDbType.Int}
+            };
+
+            DataTable dt = ser.GetDataSet(sql, CommandType.Text, parmeter).Tables[0];
+            if (dt != null)
+            {
+                return dt;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string GetAssesTotal(int type, int rank)
+        {
+            string sql = "select count(1) from 评估记录表 where 评估类别=@type and 等级=@rank";
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@type",type){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@rank",rank){SqlDbType=SqlDbType.Int}
+            };
+            var result = ser.ExecuteScalar(sql, CommandType.Text, parmeter);
+            return result.ToString();
         }
 
         #endregion
