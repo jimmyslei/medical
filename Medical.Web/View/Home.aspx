@@ -193,8 +193,8 @@
                 </div>
             </div>
             <div class="row  no-margin-bottom">
-                <%-- <div class="col-sm-6 col-xs-12">--%>
-                <%--  <div class="row">
+                <%-- <div class="col-sm-6 col-xs-12">
+                      <div class="row">
                         <div class="col-xs-12">
                             <div class="card primary">
                                 <div class="card-jumbotron no-padding">
@@ -207,8 +207,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>--%>
-                <%--  <div class="row">
+                    </div>
+                  <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <div class="thumbnail no-margin-bottom">
                                 <img src="../img/thumbnails/picjumbo.com_IMG_4566.jpg" class="img-responsive">
@@ -229,8 +229,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div>--%>
-                <%-- </div>--%>
+                    </div>
+                 </div>--%>
                 <div class="col-sm-6 col-xs-12">
                     <%--  <div class="row">
                         <div class="col-md-6 col-sm-12">
@@ -259,7 +259,7 @@
                     <div class="card card-success">
                         <div class="card-header">
                             <div class="card-title">
-                                <div class="title"><i class="fa fa-comments-o"></i>图表</div>
+                                <div class="title"><i class="fa fa-area-chart"></i>图表</div>
                             </div>
                             <div class="clear-both"></div>
                         </div>

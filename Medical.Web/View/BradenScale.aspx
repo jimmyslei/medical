@@ -160,7 +160,7 @@
             data.rank = rank;
 
             comFn.Ajax(url, data, function (sdata) {
-                if (sdata == "1") {
+                if (sdata > "0") {
                     layer.open({
                         content: tips,
                         btn: ['确定'],

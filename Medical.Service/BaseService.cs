@@ -487,16 +487,19 @@ namespace Medical.Service
         #region 评估
         public string EditAssess(int patId, string assItem, int assType, double score, int rank)
         {
-            string sql = @"insert into 评估记录表(病人Id
+            string sql = @"update 评估记录表 set 标识=1 where 病人Id=@patId and 评估类别=@type; 
+                    insert into 评估记录表(病人Id
                           ,[评估项目]
                           ,[评估类别]
                           ,[评估总分]
                           ,[评估日期]
-                          ,等级) values(@painId,@asseItem,@asseType,@score,@time,@rank)";
+                          ,等级,标识) values(@painId,@asseItem,@asseType,@score,@time,@rank,0)";
             SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@patId",patId){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@type",assType){SqlDbType=SqlDbType.Int},
                 new SqlParameter("@painId",patId){SqlDbType=SqlDbType.Int},
                 new SqlParameter("@asseItem",assItem){SqlDbType=SqlDbType.NVarChar},
-                new SqlParameter("@asseType",assType){SqlDbType=SqlDbType.Int},
+                new SqlParameter("@asseType",assType){SqlDbType=SqlDbType.Int},    
                 new SqlParameter("@score",score){SqlDbType=SqlDbType.Float},
                 new SqlParameter("@time",DateTime.Now){SqlDbType=SqlDbType.DateTime},
                 new SqlParameter("@rank",rank){SqlDbType=SqlDbType.Int}
