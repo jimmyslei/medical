@@ -12,14 +12,17 @@
         #gbox_jDataGrid, #gview_jDataGrid, #gridPager, .ui-jqgrid-hdiv, .ui-jqgrid-bdiv {
             width: 100% !important;
         }
-        .select2-container--default .select2-selection--single .select2-selection__rendered{
-            line-height:25px !important;
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 25px !important;
         }
-        .select2-container .select2-selection--single .select2-selection__rendered{
-            padding-left:0px !important;
+
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            padding-left: 0px !important;
         }
-        .flat-blue .table .danger,.flat-blue .table .success,.flat-blue .table .warning,.flat-blue .table .primary{
-            color:white !important;
+
+        .flat-blue .table .danger, .flat-blue .table .success, .flat-blue .table .warning, .flat-blue .table .primary {
+            color: white !important;
         }
     </style>
 </asp:Content>
@@ -38,10 +41,11 @@
                             <div>
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-
+                                        
+                                        <audio src="../music/tis.mp3" id="myaudio" controls="controls" loop="false" autoplay hidden="true"></audio>               
                                         <div class="btn-group">
                                             <span>风险类别</span>
-                                            <select id="type" style="width:180px">
+                                            <select id="type" style="width: 180px">
                                                 <option value="1">疼痛评估</option>
                                                 <option value="2">Braden压疮风险评估</option>
                                                 <option value="3">Morse跌倒评估</option>
@@ -51,9 +55,9 @@
 
                                         </div>
                                         <div class="btn-group">
-                                            
+
                                             <span>风险等级</span>
-                                            <select id="rank" style="width:130px">
+                                            <select id="rank" style="width: 130px">
                                                 <option value="1">无风险</option>
                                                 <option value="2">低风险</option>
                                                 <option value="3">中风险</option>
@@ -93,6 +97,9 @@
         $.jgrid.defaults.responsive = true;
         var pageIndex = 1, pageSize = 10;
         $(function myfunction() {
+            //var myAuto = document.getElementById('myaudio');
+            //myAuto.play();  //播放
+            //myAuto.pause(); //暂停
             $(".username").text(getCookie("Home_UserName"));
             var state = getCookie("state");
             if (state == "2") {
@@ -101,15 +108,15 @@
             }
 
 
-            //时间比较
-            debugger;
-            var planDate = new Date('2018-02-25 05:30:00');
-            var applyDate = new Date('2018-03-02 12:25:18');
-            
-            if (applyDate > planDate) {
-                alert("预计完成时间不能早于提请日期！");
-                //return false;
-            }
+            ////时间比较
+            //debugger;
+            //var planDate = new Date('2018-02-25 05:30:00');
+            //var applyDate = new Date('2018-03-02 12:25:18');
+
+            //if (applyDate > planDate) {
+            //    alert("预计完成时间不能早于提请日期！");
+            //    //return false;
+            //}
 
 
             Number.prototype.zeroPadding = function () {
@@ -176,7 +183,7 @@
                 allowClear: false
             });
 
-            $("#type").on("select2:select",function(e){
+            $("#type").on("select2:select", function (e) {
                 queryFunc(pageIndex, pageSize)
             })
             $("#rank").on("select2:select", function (e) {
@@ -189,7 +196,7 @@
         function load() {
             var type = $("#type option:selected").val();
             var rank = $("#rank option:selected").val();
-            
+
             $('#jDataGrid').jqGrid({
                 url: 'BaseManageHandler.ashx?tag=GetAssess',
                 postData: { pageIndex: pageIndex, pageSize: pageSize, type: type, rank: rank },
@@ -250,7 +257,7 @@
 
                 },
                 loadComplete: function (data) {
-                    
+
                 },
                 onPaging: function (pageBtn) {
                     var re_page = $(this).getGridParam('page');//获取返回的当前页

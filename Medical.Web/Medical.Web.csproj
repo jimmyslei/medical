@@ -80,6 +80,8 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -93,7 +95,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\AdminLTE.min.css" />
@@ -417,6 +418,7 @@
     <Content Include="lib\js\jquery.matchHeight-min.js" />
     <Content Include="lib\js\jquery.min.js" />
     <Content Include="lib\js\select2.full.min.js" />
+    <Content Include="music\tis.mp3" />
     <Content Include="packages.config" />
     <Content Include="lib\fonts\fontawesome-webfont.eot" />
     <Content Include="lib\fonts\fontawesome-webfont.ttf" />
