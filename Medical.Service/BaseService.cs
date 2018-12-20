@@ -548,6 +548,47 @@ namespace Medical.Service
             var result = ser.ExecuteScalar(sql, CommandType.Text, parmeter);
             return result.ToString();
         }
+        
+        public DataTable GetAssCountbyPainId(int painId)
+        {
+            string sql = "select count(1),评估项目 from [评估记录表] where 病人Id=@painId group by 评估项目";
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@painId",painId){SqlDbType=SqlDbType.Int}
+            };
+            var dt = ser.GetDataSet(sql, CommandType.Text, parmeter).Tables[0];
+            if (dt != null)
+            {
+                return dt;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public DataTable GetCharts(int painId)
+        {
+            string sql = @"select [ID]
+                      ,[病人Id]
+                      ,[评估项目]
+                      ,[评估类别]
+                      ,[评估总分]
+                      ,CONVERT(varchar(60), 评估日期, 20) 评估日期
+                      ,[等级]
+                      ,[标识] from 评估记录表 where 病人Id=@painId";
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@painId",painId){SqlDbType=SqlDbType.Int}
+            };
+            var dt = ser.GetDataSet(sql, CommandType.Text, parmeter).Tables[0];
+            if (dt != null)
+            {
+                return dt;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         #endregion
 

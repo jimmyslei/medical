@@ -11,57 +11,29 @@
     <script>
 
         $(function () {
-            var state = comFn.getQueryString("state");
+            var state = getCookie("state");
             $(".username").text(getCookie("Home_UserName"));
-
-            setCookie("state", state, 30);
+            
             if (state == "2") {
                 $("#baseLi").hide();
                 $("#updatePwd").hide();
             }
 
-            var myChart = echarts.init(document.getElementById('chart'));
-            option = {
-                //title: {
-                //    text: '折线图堆叠'
-                //},
-                tooltip: {
-                    trigger: 'axis'
-                },
-                legend: {
-                    data: ['邮件营销'],
-                    align: 'left',
-                    left: 30
-                },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
-                },
-                //toolbox: {
-                //    feature: {
-                //        saveAsImage: {}
-                //    }
-                //},
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [
-                    {
-                        name: '邮件营销',
-                        type: 'line',
-                        stack: '总量',
-                        data: [120, 132, 101, 134, 90, 230, 210]
+            comFn.Ajax("BaseManageHandler.ashx?tag=GetPatiens", null, function (sdata) {
+                if (sdata.length > 0) {
+                    for (var i = 0; i < sdata.length; i++) {
+                        $("#pt").append("<option value='" + sdata[i]["ID"] + "'>" + sdata[i]["姓名"] + "</option>");
                     }
-                ]
-            };
-            myChart.setOption(option);
+                }
+            }, function () {
+
+            }, false);
+
+            $("#pt").change(function () {
+                chartsShow();
+            })
+
+            chartsShow();
 
             $("#exitLogin").click(function () {
                 delCookie("Home_UserName");
@@ -111,6 +83,137 @@
             });
         })
 
+        function setChart(htmlId, lengedx, xData, yData) {
+            var myChart = echarts.init(document.getElementById(htmlId));
+            option = {
+                //title: {
+                //    text: '折线图堆叠'
+                //},
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: lengedx,
+                    align: 'left',
+                    left: 30
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    //axisLabel: {  
+                    //    interval:0,  
+                    //    rotate:-40  
+                    //},
+                    data: xData//['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: lengedx[0],//'邮件营销',
+                        type: 'line',
+                        stack: '总量',
+                        data: yData//[120, 132, 101, 134, 90, 230, 210]
+                    }
+                ]
+            };
+            myChart.setOption(option,false);
+        }
+
+        function chartsShow() {
+            $("#疼痛评估").hide();
+            $("#Braden压疮风险评估").hide();
+            $("#Morse跌倒评估").hide();
+            $("#VTE评估").hide();
+            $("#非计划性拔管评估").hide();
+            var ptId = $("#pt option:selected").val();
+            var data = { painId: ptId };
+            comFn.Ajax("BaseManageHandler.ashx?tag=GetAssCountbyPainId", data, function (rdata) {
+                for (var i = 0; i < rdata.length; i++) {
+                    $("#" + rdata[i]["评估项目"] + "").show();
+                }
+            }, function () { }, false);
+            chart();
+        }
+
+        function chart() {
+            var ptId = $("#pt option:selected").val();
+            var data = { painId: ptId };
+            var x = new Array();
+            var xdata = new Array();
+            var ydata = new Array();
+            var data1 = new Array(), data2 = new Array(), data3 = new Array(), data4 = new Array(), data5 = new Array();
+            comFn.Ajax("BaseManageHandler.ashx?tag=GetCharts", data, function (sdata) {
+                for (var i = 0; i < sdata.length; i++) {
+                    if (sdata[i]["评估类别"]=="1") {
+                        data1.push(sdata[i]);
+                    } else if (sdata[i]["评估类别"] == "2") {
+                        data2.push(sdata[i]);
+                    } else if (sdata[i]["评估类别"] == "3") {
+                        data3.push(sdata[i]);
+                    } else if (sdata[i]["评估类别"] == "4") {
+                        data4.push(sdata[i]);
+                    } else if (sdata[i]["评估类别"] == "5") {
+                        data5.push(sdata[i]);
+                    }
+                }
+            }, function () { }, false);
+
+            if (data1.length > 0) {
+                x.push(data1[0]["评估项目"]);
+                for (var i = 0; i < data1.length; i++) {
+                    xdata.push(data1[i]["评估日期"]);
+                    ydata.push(data1[i]["评估总分"])
+                }
+                setChart('chart', x, xdata, ydata);
+                x = new Array(), xdata = new Array(), ydata = new Array();
+            }
+            if (data2.length > 0) {
+                x.push(data2[0]["评估项目"]);
+                for (var i = 0; i < data2.length; i++) {
+                    xdata.push(data2[i]["评估日期"]);
+                    ydata.push(data2[i]["评估总分"])
+                }
+                setChart('chart1', x, xdata, ydata);
+                x = new Array(), xdata = new Array(), ydata = new Array();
+            }
+            if (data3.length > 0) {
+                x.push(data3[0]["评估项目"]);
+                for (var i = 0; i < data3.length; i++) {
+                    xdata.push(data3[i]["评估日期"]);
+                    ydata.push(data3[i]["评估总分"])
+                }
+                setChart('chart2', x, xdata, ydata);
+                x = new Array(), xdata = new Array(), ydata = new Array();
+            }
+            if (data4.length > 0) {
+                x.push(data4[0]["评估项目"]);
+                for (var i = 0; i < data4.length; i++) {
+                    xdata.push(data4[i]["评估日期"]);
+                    ydata.push(data4[i]["评估总分"])
+                }
+                setChart('chart3', x, xdata, ydata);
+                x = new Array(), xdata = new Array(), ydata = new Array();
+            }
+            if (data5.length > 0) {
+                x.push(data5[0]["评估项目"]);
+                for (var i = 0; i < data5.length; i++) {
+                    xdata.push(data5[i]["评估日期"]);
+                    ydata.push(data5[i]["评估总分"])
+                }
+                setChart('chart4', x, xdata, ydata);
+                x = new Array(), xdata = new Array(), ydata = new Array();
+            }
+        }
+
         function save(url, data) {
             var result = false;
             comFn.Ajax(url, data, function (data) {
@@ -126,15 +229,29 @@
             return result;
         }
 
-
     </script>
-
+    <style>
+        .flat-blue .card.card-success .card-header{
+            background-color:#22A7F0 !important;
+        }
+    </style>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <nav class="navbar navbar-default navbar-fixed-top navbar-top" style="margin-top: 59px; z-index: 1000; background-color: white">
+        <div class="container-fluid">
+            <div class="form-group text-show" style="margin-top: 15px">
+                <label for="pt">病人</label>
+                <%--<input type="text" name="makeupCo" id="makeupCo" class="makeinp" onfocus='setfocus(this,"#typenum","#makeupCo","#search-button")' oninput='setinput(this,"#typenum");' placeholder="请选择或输入匹配文字"><div id="search-button" onclick='setfocus(document.getElementById("makeupCo"),"#typenum","#makeupCo","#search-button")'><span class="search-img"></span></div>
+                <select name="makeupCoSe" id="typenum" onchange='changeF(this,"#typenum","makeupCo","#search-button")' size="10" style="display: none;">--%>
+                <select class="form-control text select2-selection" style="font-size: 0.9em; display: -webkit-inline-box !important; width: 180px !important; height: 30px !important" cname="pt" id="pt">
+                </select>
+            </div>
+        </div>
+    </nav>
     <div class="container-fluid">
         <div class="side-body padding-top">
-            <div class="row">
+            <div class="row" style="margin-top: 45px;display:none">
                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                     <a href="#">
                         <div class="card red summary-inline">
@@ -192,124 +309,68 @@
                     </a>
                 </div>
             </div>
-            <div class="row  no-margin-bottom">
-                <%-- <div class="col-sm-6 col-xs-12">
-                      <div class="row">
-                        <div class="col-xs-12">
-                            <div class="card primary">
-                                <div class="card-jumbotron no-padding">
-                                    <canvas id="jumbotron-line-chart" class="chart no-padding"></canvas>
-                                </div>
-                                <div class="card-body half-padding">
-                                    <h4 class="float-left no-margin font-weight-300">Profits</h4>
-                                    <h2 class="float-right no-margin font-weight-300">$3200</h2>
-                                    <div class="clear-both"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                  <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <div class="thumbnail no-margin-bottom">
-                                <img src="../img/thumbnails/picjumbo.com_IMG_4566.jpg" class="img-responsive">
-                                <div class="caption">
-                                    <h3 id="thumbnail-label">Thumbnail label<a class="anchorjs-link" href="#thumbnail-label"><span class="anchorjs-icon"></span></a></h3>
-                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                                    <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <div class="thumbnail no-margin-bottom">
-                                <img src="../img/thumbnails/picjumbo.com_IMG_3241.jpg" class="img-responsive">
-                                <div class="caption">
-                                    <h3 id="thumbnail-label">Thumbnail label<a class="anchorjs-link" href="#thumbnail-label"><span class="anchorjs-icon"></span></a></h3>
-                                    <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-                                    <p><a href="#" class="btn btn-success" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                 </div>--%>
-                <div class="col-sm-6 col-xs-12">
-                    <%--  <div class="row">
-                        <div class="col-md-6 col-sm-12">
-                            <div class="card primary">
-                                <div class="card-jumbotron no-padding">
-                                    <canvas id="jumbotron-bar-chart" class="chart no-padding"></canvas>
-                                </div>
-                                <div class="card-body half-padding">
-                                    <h4 class="float-left no-margin font-weight-300">Orders</h4>
-                                    <div class="clear-both"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <div class="card primary">
-                                <div class="card-jumbotron no-padding">
-                                    <canvas id="jumbotron-line-2-chart" class="chart no-padding"></canvas>
-                                </div>
-                                <div class="card-body half-padding">
-                                    <h4 class="float-left no-margin font-weight-300">Pages view</h4>
-                                    <div class="clear-both"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>--%>
+            <div class="row  no-margin-bottom" style="margin-top: 45px;">
+                <div class="col-sm-6 col-xs-12" id="疼痛评估">
                     <div class="card card-success">
                         <div class="card-header">
                             <div class="card-title">
-                                <div class="title"><i class="fa fa-area-chart"></i>图表</div>
+                                <div class="title"><i class="fa fa-area-chart"></i>疼痛评估统计</div>
                             </div>
                             <div class="clear-both"></div>
                         </div>
-                        <div class="card-body no-padding" id="chart" style="height: 250px">
-                            <%-- <ul class="message-list">
-                                <a href="#">
-                                    <li>
-                                        <img src="../img/profile/profile-1.jpg" class="profile-img pull-left">
-                                        <div class="message-block">
-                                            <div>
-                                                <span class="username">Tui2Tone</span> <span class="message-datetime">12 min ago</span>
-                                            </div>
-                                            <div class="message">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.</div>
-                                        </div>
-                                    </li>
-                                </a>
-                                <a href="#">
-                                    <li>
-                                        <img src="../img/profile/profile-1.jpg" class="profile-img pull-left">
-                                        <div class="message-block">
-                                            <div>
-                                                <span class="username">Tui2Tone</span> <span class="message-datetime">15 min ago</span>
-                                            </div>
-                                            <div class="message">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.</div>
-                                        </div>
-                                    </li>
-                                </a>
-                                <a href="#">
-                                    <li>
-                                        <img src="../img/profile/profile-1.jpg" class="profile-img pull-left">
-                                        <div class="message-block">
-                                            <div>
-                                                <span class="username">Tui2Tone</span> <span class="message-datetime">2 hour ago</span>
-                                            </div>
-                                            <div class="message">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.</div>
-                                        </div>
-                                    </li>
-                                </a>
-                                <a href="#">
-                                    <li>
-                                        <img src="../img/profile/profile-1.jpg" class="profile-img pull-left">
-                                        <div class="message-block">
-                                            <div>
-                                                <span class="username">Tui2Tone</span> <span class="message-datetime">1 day ago</span>
-                                            </div>
-                                            <div class="message">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.</div>
-                                        </div>
-                                    </li>
-                                </a>
-                            </ul>--%>
+                        <div class="card-body no-padding" id="chart" style="height: 250px;margin-bottom:10px">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xs-12" id="Braden压疮风险评估">
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="title"><i class="fa fa-area-chart"></i>Braden压疮评估统计</div>
+                            </div>
+                            <div class="clear-both"></div>
+                        </div>
+                        <div class="card-body no-padding" id="chart1" style="height: 250px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row no-margin-bottom">
+                <div class="col-sm-6 col-xs-12" id="Morse跌倒评估">
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="title"><i class="fa fa-area-chart"></i>Morse跌倒评估统计</div>
+                            </div>
+                            <div class="clear-both"></div>
+                        </div>
+                        <div class="card-body no-padding" id="chart2" style="height: 250px">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xs-12" id="VTE评估">
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="title"><i class="fa fa-area-chart"></i>VTE评估统计</div>
+                            </div>
+                            <div class="clear-both"></div>
+                        </div>
+                        <div class="card-body no-padding" id="chart3" style="height: 250px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row no-margin-bottom">
+                <div class="col-xs-12" id="非计划性拔管评估">
+                    <div class="card card-success">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="title"><i class="fa fa-area-chart"></i>非计划性拔管评估统计</div>
+                            </div>
+                            <div class="clear-both"></div>
+                        </div>
+                        <div class="card-body no-padding" id="chart4" style="height: 250px">
                         </div>
                     </div>
                 </div>

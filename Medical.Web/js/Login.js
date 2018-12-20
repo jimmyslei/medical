@@ -156,6 +156,7 @@ function login() {
                 Code();
             }
             else {
+                setCookie("state", s, 30);
                 window.location.href = "View/Home.aspx?state=" + s;
             }
             layer.close(index);

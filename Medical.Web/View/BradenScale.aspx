@@ -31,6 +31,7 @@
     </style>
     <script>
         var paintId;
+        
         $(function () {
             paintId = comFn.getQueryString("id");
             $(".username").text(getCookie("Home_UserName"));
@@ -39,7 +40,8 @@
                 $("#baseLi").hide();
                 $("#updatePwd").hide();
             }
-
+            var myAuto = document.getElementById('myaudio');
+            myAuto.pause(); //暂停
             if (paintId == null) {
                 var html = $("#patin").val();
                 layer.open({
@@ -133,7 +135,7 @@
             $.each($("input[type=radio]:checked"), function (d) {
                 score += parseInt($(this).val());
             })
-
+            var myAuto = document.getElementById('myaudio');
             var rank, tips = '';
             if (score > 18) {
                 rank = 1;
@@ -147,9 +149,11 @@
             } else if (score >= 10 && score <= 12) {
                 rank = 4;
                 tips = '该病人当前处于 高危 状态，请每周评估两次';
+                myAuto.play();  //播放
             } else if (score <= 9) {
                 rank = 5;
                 tips = '该病人当前处于 极高危 状态，请每两天评估一次';
+                myAuto.play();  //播放
             }
 
             var data = {};
@@ -165,6 +169,7 @@
                         content: tips,
                         btn: ['确定'],
                         yes: function (index) {
+                            myAuto.pause(); //暂停
                             layer.close(index);
                         }
                     });
@@ -186,6 +191,7 @@
     <div class="container-fluid">
         <div class="side-body">
             <div class="row">
+                <audio src="../music/tis.mp3" id="myaudio" controls="controls" loop="false" autoplay hidden="true"></audio> 
                 <div class="col-xs-12">
                     <div class="card">
                         <textarea id="patin" style="display: none;">

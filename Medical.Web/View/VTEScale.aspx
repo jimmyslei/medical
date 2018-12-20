@@ -40,7 +40,8 @@
                 $("#baseLi").hide();
                 $("#updatePwd").hide();
             }
-
+            var myAuto = document.getElementById('myaudio');
+            myAuto.pause(); //暂停
             if (paintId == null) {
                 var html = $("#patin").val();
                 layer.open({
@@ -131,7 +132,7 @@
 
         function Save() {
             var url = "BaseManageHandler.ashx?tag=EditAssess";
-
+            var myAuto = document.getElementById('myaudio');
             var score = 0;
             $.each($('input:checkbox:checked'), function () {
                 score = $(this).val();
@@ -147,9 +148,11 @@
             } else if (score >= 3 && score <= 4) {
                 rank = 4;
                 tips = '该病人当前处于 高危 状态，请每日评估一次';
+                myAuto.play();  //播放
             } else if (score >= 5) {
                 rank = 5;
                 tips = '该病人当前处于 极高危 状态，请每日评估一次';
+                myAuto.play();  //播放
             }
 
             var data = {};
@@ -165,6 +168,7 @@
                         content: tips,
                         btn: ['确定'],
                         yes: function (index) {
+                            myAuto.pause(); //暂停
                             layer.close(index);
                         }
                     });
@@ -187,6 +191,7 @@
     <div class="container-fluid">
         <div class="side-body">
             <div class="row">
+                <audio src="../music/tis.mp3" id="myaudio" controls="controls" loop="false" autoplay hidden="true"></audio> 
                 <div class="col-xs-12">
                     <div class="card">
                         <textarea id="patin" style="display: none;">

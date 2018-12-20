@@ -279,6 +279,7 @@
     <Content Include="js\list.js" />
     <Content Include="js\Login.js" />
     <Content Include="js\Login\Treatment.js" />
+    <Content Include="js\matching.js" />
     <Content Include="js\modal.js" />
     <Content Include="js\particles.min.js" />
     <Content Include="js\rolldate\rolldate.css" />
@@ -459,7 +460,6 @@
   <ItemGroup>
     <Content Include="View\MorseScale.aspx" />
     <Content Include="View\PainAssessScale.aspx" />
-    <Content Include="View\PainAssScale.aspx" />
     <Content Include="View\PatientList.aspx" />
     <Content Include="View\PersonList.aspx" />
     <Content Include="View\UEXScale.aspx" />

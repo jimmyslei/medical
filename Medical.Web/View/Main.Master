@@ -40,6 +40,7 @@
 
     <script type="text/javascript" src="../js/app.js"></script>
     <script type="text/javascript" src="../js/index.js"></script>
+   
     <style>
         .text-show {
             width: 95%;
@@ -76,9 +77,9 @@
                             <button type="button" class="navbar-expand-toggle">
                                 <i class="fa fa-bars icon"></i>
                             </button>
-                            <ol class="breadcrumb navbar-breadcrumb">
+                            <%--<ol class="breadcrumb navbar-breadcrumb" id="change">
                                 <li class="active">首页</li>
-                            </ol>
+                            </ol>--%>
                             <button type="button" class="navbar-right-expand-toggle pull-right visible-xs">
                                 <i class="fa fa-th icon"></i>
                             </button>
@@ -87,45 +88,6 @@
                             <button type="button" class="navbar-right-expand-toggle pull-right visible-xs">
                                 <i class="fa fa-times icon"></i>
                             </button>
-                            <%--<li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-comments-o"></i></a>
-                                <ul class="dropdown-menu animated fadeInDown">
-                                    <li class="title">Notification <span class="badge pull-right">0</span>
-                                    </li>
-                                    <li class="message">No new notification
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="dropdown danger">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-star-half-o"></i>4</a>
-                                <ul class="dropdown-menu danger  animated fadeInDown">
-                                    <li class="title">Notification <span class="badge pull-right">4</span>
-                                    </li>
-                                    <li>
-                                        <ul class="list-group notifications">
-                                            <a href="#">
-                                                <li class="list-group-item">
-                                                    <span class="badge">1</span> <i class="fa fa-exclamation-circle icon"></i>new registration
-                                                </li>
-                                            </a>
-                                            <a href="#">
-                                                <li class="list-group-item">
-                                                    <span class="badge success">1</span> <i class="fa fa-check icon"></i>new orders
-                                                </li>
-                                            </a>
-                                            <a href="#">
-                                                <li class="list-group-item">
-                                                    <span class="badge danger">2</span> <i class="fa fa-comments icon"></i>customers messages
-                                                </li>
-                                            </a>
-                                            <a href="#">
-                                                <li class="list-group-item message">view all
-                                                </li>
-                                            </a>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>--%>
                             <li class="dropdown profile">
                                 <a href="#" class="dropdown-toggle username" data-toggle="dropdown" role="button" aria-expanded="false">系统管理员 <span class="caret"></span></a>
                                 <ul class="dropdown-menu animated fadeInDown">
@@ -159,8 +121,8 @@
                                 </button>
                             </div>
                             <ul class="nav navbar-nav">
-                                <li class="active">
-                                    <a href="Home.aspx" onclick="change()">
+                                <li class="active" id="homes">
+                                    <a href="Home.aspx" id="home">
                                         <span class="icon fa fa-tachometer"></span><span class="title">首页</span>
                                     </a>
                                 </li>

@@ -75,6 +75,12 @@ namespace Medical.Library
                     case "GetAssess":
                         rstr = GetAssess(context);
                         break;
+                    case "GetAssCountbyPainId":
+                        rstr = GetAssCountbyPainId(context);
+                        break;
+                    case "GetCharts":
+                        rstr = GetCharts(context);
+                        break;
                     default:
                         rstr = "tag方法未在定义范围内！";
                         break;
@@ -360,5 +366,17 @@ namespace Medical.Library
                   "\"total\":" + pageCount + "}";
         }
         
+        private string GetAssCountbyPainId(HttpContext context)
+        {
+            var painId = context.Request["painId"];
+            return bases.GetAssCountbyPainId(Convert.ToInt32(painId)).ToJson();
+        }
+
+        private string GetCharts(HttpContext context)
+        {
+            var painId = context.Request["painId"];
+            return bases.GetCharts(Convert.ToInt32(painId)).ToJson();
+        }
+
     }
 }

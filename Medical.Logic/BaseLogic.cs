@@ -166,6 +166,16 @@ namespace Medical.Logic
             return service.GetAssesTotal(type, rank);
         }
 
+        public DataTable GetAssCountbyPainId(int painId)
+        {
+            return service.GetAssCountbyPainId(painId);
+        }
+
+        public DataTable GetCharts(int painId)
+        {
+            return service.GetCharts(painId);
+        }
+
         #endregion
 
     }

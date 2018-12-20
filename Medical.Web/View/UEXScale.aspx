@@ -39,7 +39,8 @@
                 $("#baseLi").hide();
                 $("#updatePwd").hide();
             }
-
+            var myAuto = document.getElementById('myaudio');
+            myAuto.pause(); //暂停
             if (paintId == null) {
                 var html = $("#patin").val();
                 layer.open({
@@ -134,7 +135,7 @@
             $.each($('input:checkbox:checked'), function () {
                 score += parseInt($(this).val());
             });
-
+            var myAuto = document.getElementById('myaudio');
             var rank, tips = '';
             if (score >= 1 && score <= 3) {
                 rank = 2;
@@ -145,6 +146,7 @@
             } else if (score >= 7) {
                 rank = 4;
                 tips = '该病人当前处于 高风险 状态，请每24小时评估一次';
+                myAuto.play();  //播放
             }
 
             var data = {};
@@ -160,6 +162,7 @@
                         content: tips,
                         btn: ['确定'],
                         yes: function (index) {
+                            myAuto.pause(); //暂停
                             layer.close(index);
                         }
                     });
@@ -182,7 +185,8 @@
     <div class="container-fluid">
         <div class="side-body">
             <div class="row">
-                <div class="col-xs-12">
+                 <audio src="../music/tis.mp3" id="myaudio" controls="controls" loop="false" autoplay hidden="true"></audio> 
+               <div class="col-xs-12">
                     <div class="card">
                         <textarea id="patin" style="display: none;">
                              <form id="form" class="form-inline" style="max-height: 350px;overflow:scroll;overflow-x:hidden;">

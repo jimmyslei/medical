@@ -51,7 +51,7 @@
                                                 <li><a href="#" onclick="Del(1,'确定要给给病人办理出院吗？')">出院</a></li>
                                                 <li><a href="#" onclick="Add()">新增</a></li>
                                                 <li><a href="#" onclick="Edit()">修改</a></li>
-                                                <li><a href="#" onclick="Del(-1,'确定要删除该数据吗？')">删除</a></li>
+                                                <%--<li><a href="#" onclick="Del(-1,'确定要删除该数据吗？')">删除</a></li>--%>
                                             </ul>
                                         </div>
                                         <div class="btn-group">

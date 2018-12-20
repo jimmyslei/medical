@@ -97,9 +97,9 @@
         $.jgrid.defaults.responsive = true;
         var pageIndex = 1, pageSize = 10;
         $(function myfunction() {
-            //var myAuto = document.getElementById('myaudio');
+            var myAuto = document.getElementById('myaudio');
             //myAuto.play();  //播放
-            //myAuto.pause(); //暂停
+            myAuto.pause(); //暂停
             $(".username").text(getCookie("Home_UserName"));
             var state = getCookie("state");
             if (state == "2") {
