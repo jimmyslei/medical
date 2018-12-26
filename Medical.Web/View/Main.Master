@@ -201,6 +201,9 @@
                                         <div class="panel-body">
                                             <ul class="nav navbar-nav">
                                                 <li>
+                                                    <a href="BasicSignScale.aspx">基本体征评估表</a>
+                                                </li>
+                                                <li>
                                                     <a href="PainAssessScale.aspx">疼痛评估量表</a>
                                                 </li>
                                                 <li>

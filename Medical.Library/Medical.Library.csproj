@@ -47,6 +47,9 @@
     <Compile Include="View\AssessList.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="View\BasicSignScale.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="View\BradenScale.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -63,6 +66,9 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="View\MorseScale.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View\OutAssessment.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="View\PainAssessScale.cs">

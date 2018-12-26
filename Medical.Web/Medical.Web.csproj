@@ -431,6 +431,7 @@
     <Content Include="lib\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="lib\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="View\AssessList.aspx" />
+    <Content Include="View\BasicSignScale.aspx" />
     <Content Include="View\BradenScale.aspx" />
     <Content Include="View\Department.aspx" />
     <Content Include="View\HisPatienList.aspx" />
@@ -459,6 +460,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="View\MorseScale.aspx" />
+    <Content Include="View\OutAssessment.aspx" />
     <Content Include="View\PainAssessScale.aspx" />
     <Content Include="View\PatientList.aspx" />
     <Content Include="View\PersonList.aspx" />

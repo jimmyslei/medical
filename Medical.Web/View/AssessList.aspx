@@ -46,6 +46,7 @@
                                         <div class="btn-group">
                                             <span>风险类别</span>
                                             <select id="type" style="width: 180px">
+                                                <option value="6">基本体征评估</option>
                                                 <option value="1">疼痛评估</option>
                                                 <option value="2">Braden压疮风险评估</option>
                                                 <option value="3">Morse跌倒评估</option>
@@ -226,6 +227,8 @@
                                 return "VTE评估";
                             } else if (cellvalue == "5") {
                                 return "非计划性拔管评估";
+                            } else if (cellvalue == "6") {
+                                return "基本体征评估";
                             }
                         }
                     },
