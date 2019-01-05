@@ -36,6 +36,9 @@
     <script>
         var paintId;
         $(function () {
+            if (getCookie("Home_UserName") == null) {
+                window.location.href = "../Login";
+            }
             paintId = comFn.getQueryString("id");
             $(".username").text(getCookie("Home_UserName"));
             var state = getCookie("state");

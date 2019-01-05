@@ -33,6 +33,9 @@
     <script>
         var paintId;
         $(function () {
+            if (getCookie("Home_UserName") == null) {
+                window.location.href = "../Login";
+            }
             paintId = comFn.getQueryString("id");
             $(".username").text(getCookie("Home_UserName"));
             var state = getCookie("state");
@@ -200,7 +203,7 @@
                         </textarea>
                         <div class="card-header">
                             <div class="card-title">
-                                <div class="title" style="color: white; float: left">Morse跌倒风险评估量表</div>
+                                <div class="title" style="color: white; float: left">基本体征评估表</div>
                             </div>
                         </div>
                         <div class="card-body">

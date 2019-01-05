@@ -11,6 +11,9 @@
     <script>
 
         $(function () {
+            if (getCookie("Home_UserName") == null) {
+                window.location.href = "../Login";
+            }
             var state = getCookie("state");
             $(".username").text(getCookie("Home_UserName"));
             

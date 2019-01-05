@@ -57,6 +57,7 @@
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">风险评估 <span class="caret"></span></button>
                                             <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#" onclick="Assess(6)">基本体征评估</a></li>
                                                 <li><a href="#" onclick="Assess(1)">疼痛评估</a></li>
                                                 <li><a href="#" onclick="Assess(2)">跌倒评估</a></li>
                                                 <li><a href="#" onclick="Assess(3)">Braden压疮评估</a></li>
@@ -161,6 +162,9 @@
         var pageIndex = 1, pageSize = 10;
 
         $(function () {
+            if (getCookie("Home_UserName") == null) {
+                window.location.href = "../Login";
+            }
             $(".username").text(getCookie("Home_UserName"));
             var state = getCookie("state");
             if (state == "2") {
@@ -576,6 +580,8 @@
                     window.location.href = "VTEScale.aspx?id=" + rowData.ID;
                 } else if (state == "5") {
                     window.location.href = "UEXScale.aspx?id=" + rowData.ID;
+                } else if (state == "6") {
+                    window.location.href = "BasicSignScale.aspx?id=" + rowData.ID;
                 }
             } else {
                 layer.open({

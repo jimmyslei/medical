@@ -114,6 +114,9 @@
         var pageIndex = 1, pageSize = 10;
 
         $(function () {
+            if (getCookie("Home_UserName") == null) {
+                window.location.href = "../Login";
+            }
             $(".username").text(getCookie("Home_UserName"));
             var state = getCookie("state");
             if (state == "2") {

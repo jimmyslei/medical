@@ -98,6 +98,9 @@
         $.jgrid.defaults.responsive = true;
         var pageIndex = 1, pageSize = 10;
         $(function myfunction() {
+            if (getCookie("Home_UserName") == null) {
+                window.location.href = "../Login";
+            }
             var myAuto = document.getElementById('myaudio');
             //myAuto.play();  //播放
             myAuto.pause(); //暂停
