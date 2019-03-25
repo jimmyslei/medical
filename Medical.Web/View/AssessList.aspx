@@ -104,8 +104,15 @@
             var myAuto = document.getElementById('myaudio');
             //myAuto.play();  //播放
             myAuto.pause(); //暂停
-            $(".username").text(getCookie("Home_UserName"));
+            
             var state = getCookie("state");
+
+            if (state == "1") {
+                $(".username").text(getCookie("Home_UserName"));
+            } else {
+                $(".username").text(getCookie("user") + " " + getCookie("Home_UserName"));
+            }
+
             if (state == "2") {
                 $("#baseLi").hide();
                 $("#updatePwd").hide();

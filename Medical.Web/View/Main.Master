@@ -188,6 +188,9 @@
                                                 <li>
                                                     <a href="AssessList.aspx">评估统计</a>
                                                 </li>
+                                                <li>
+                                                    <a href="Count.aspx">风险统计</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>

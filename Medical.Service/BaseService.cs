@@ -14,23 +14,45 @@ namespace Medical.Service
         DataService ser = new DataService();
 
         #region 登录
-        public string Login(PersonModel person, int state)
+        public string Login(PersonModel person, int state,ref string userName)
         {
             string sql = string.Empty;
+            string sql1 = string.Empty;
             if (state == 1)
             {
                 sql = @"select count(1) from 用户表 where 用户名=@userName and 密码=@pwd";
+                sql1 = @"select 用户名 from 用户表 where 用户名=@userName";
             }
             else
             {
                 sql = @"select count(1) from 人员信息表 where 编码=@userName";
+                sql1 = @"select 姓名 from 人员信息表 where 编码=@userName";
             }
             SqlParameter[] parmeter = new SqlParameter[] {
                 new SqlParameter("@userName",person.UserName){SqlDbType=SqlDbType.NVarChar},
                 new SqlParameter("@pwd",person.Pwd){SqlDbType=SqlDbType.NVarChar}
             };
 
-            return ser.ExecuteScalar(sql, CommandType.Text, parmeter).ToString();
+            SqlParameter[] par = new SqlParameter[] {
+                new SqlParameter("@userName",person.UserName){SqlDbType=SqlDbType.NVarChar}
+            };
+
+            var result = ser.ExecuteScalar(sql, CommandType.Text, parmeter).ToString();
+
+            userName = ser.GetDataSet(sql1, CommandType.Text, par).Tables[0].Rows[0][0].ToString();
+            return result;
+
+        }
+
+        public string GetUserName(string code)
+        {
+            string sql = @"select 姓名 from 人员信息表 where 编码=@code";
+            SqlParameter[] parmeter = new SqlParameter[] {
+                new SqlParameter("@code",code){SqlDbType=SqlDbType.NVarChar}
+            };
+
+            var table = ser.GetDataSet(sql, CommandType.Text, parmeter).Tables[0];
+            return table.Rows[0][0].ToString();
         }
 
         public string UpdatePwd(string userName, string newPwd)

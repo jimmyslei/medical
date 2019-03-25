@@ -14,9 +14,14 @@ namespace Medical.Logic
         BaseService service = new BaseService();
 
         #region 登录
-        public string Login(PersonModel person, int state)
+        public string Login(PersonModel person, int state, ref string userName)
         {
-            return service.Login(person, state);
+            return service.Login(person, state, ref userName);
+        }
+
+        public string GetUserName(string code)
+        {
+            return service.GetUserName(code);
         }
 
         /// <summary>

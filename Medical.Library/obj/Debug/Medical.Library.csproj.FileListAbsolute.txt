@@ -39,7 +39,6 @@ F:\医疗\Medical\Medical.Library\bin\Debug\Medical.Library.pdb
 F:\医疗\Medical\Medical.Library\bin\Debug\Medical.Common.dll
 F:\医疗\Medical\Medical.Library\bin\Debug\Medical.Logic.dll
 F:\医疗\Medical\Medical.Library\bin\Debug\Medical.Model.dll
-F:\医疗\Medical\Medical.Library\bin\Debug\Newtonsoft.Json.dll
 F:\医疗\Medical\Medical.Library\bin\Debug\Medical.Service.dll
 F:\医疗\Medical\Medical.Library\bin\Debug\Yun.DataService.dll
 F:\医疗\Medical\Medical.Library\bin\Debug\Medical.Common.pdb
@@ -49,3 +48,4 @@ F:\医疗\Medical\Medical.Library\bin\Debug\Medical.Service.pdb
 F:\医疗\Medical\Medical.Library\obj\Debug\Medical.Library.csprojResolveAssemblyReference.cache
 F:\医疗\Medical\Medical.Library\obj\Debug\Medical.Library.dll
 F:\医疗\Medical\Medical.Library\obj\Debug\Medical.Library.pdb
+F:\医疗\Medical\Medical.Library\bin\Debug\Newtonsoft.Json.dll

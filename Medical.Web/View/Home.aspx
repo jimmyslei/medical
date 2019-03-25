@@ -15,8 +15,13 @@
                 window.location.href = "../Login";
             }
             var state = getCookie("state");
-            $(".username").text(getCookie("Home_UserName"));
-            
+            if (state == "1") {
+                $(".username").text(getCookie("Home_UserName"));
+            } else {
+                $(".username").text(getCookie("user") + " " + getCookie("Home_UserName"));
+            }
+
+
             if (state == "2") {
                 $("#baseLi").hide();
                 $("#updatePwd").hide();
@@ -128,7 +133,7 @@
                     }
                 ]
             };
-            myChart.setOption(option,false);
+            myChart.setOption(option, false);
         }
 
         function chartsShow() {
@@ -156,7 +161,7 @@
             var data1 = new Array(), data2 = new Array(), data3 = new Array(), data4 = new Array(), data5 = new Array();
             comFn.Ajax("BaseManageHandler.ashx?tag=GetCharts", data, function (sdata) {
                 for (var i = 0; i < sdata.length; i++) {
-                    if (sdata[i]["评估类别"]=="1") {
+                    if (sdata[i]["评估类别"] == "1") {
                         data1.push(sdata[i]);
                     } else if (sdata[i]["评估类别"] == "2") {
                         data2.push(sdata[i]);
@@ -234,8 +239,8 @@
 
     </script>
     <style>
-        .flat-blue .card.card-success .card-header{
-            background-color:#22A7F0 !important;
+        .flat-blue .card.card-success .card-header {
+            background-color: #22A7F0 !important;
         }
     </style>
 
@@ -244,9 +249,15 @@
     <nav class="navbar navbar-default navbar-fixed-top navbar-top" style="margin-top: 59px; z-index: 1000; background-color: white">
         <div class="container-fluid">
             <div class="form-group text-show" style="margin-top: 15px">
+                <label for="org">科室</label>
+                <select class="form-control text select2-selection" style="font-size: 0.9em; display: -webkit-inline-box !important; width: 180px !important; height: 30px !important" cname="org" id="org">
+                    <option>外科</option>
+                    <option>内科</option>
+                </select>
+                <label for="room">床位</label>
+                <select class="form-control text select2-selection" style="font-size: 0.9em; display: -webkit-inline-box !important; width: 180px !important; height: 30px !important" cname="room" id="room">
+                </select>
                 <label for="pt">病人</label>
-                <%--<input type="text" name="makeupCo" id="makeupCo" class="makeinp" onfocus='setfocus(this,"#typenum","#makeupCo","#search-button")' oninput='setinput(this,"#typenum");' placeholder="请选择或输入匹配文字"><div id="search-button" onclick='setfocus(document.getElementById("makeupCo"),"#typenum","#makeupCo","#search-button")'><span class="search-img"></span></div>
-                <select name="makeupCoSe" id="typenum" onchange='changeF(this,"#typenum","makeupCo","#search-button")' size="10" style="display: none;">--%>
                 <select class="form-control text select2-selection" style="font-size: 0.9em; display: -webkit-inline-box !important; width: 180px !important; height: 30px !important" cname="pt" id="pt">
                 </select>
             </div>
@@ -254,7 +265,7 @@
     </nav>
     <div class="container-fluid">
         <div class="side-body padding-top">
-            <div class="row" style="margin-top: 45px;display:none">
+            <div class="row" style="margin-top: 45px; display: none">
                 <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                     <a href="#">
                         <div class="card red summary-inline">
@@ -319,9 +330,12 @@
                             <div class="card-title">
                                 <div class="title"><i class="fa fa-area-chart"></i>疼痛评估统计</div>
                             </div>
+                            <div class="card-title" style="float: right">
+                                <a class="title" style="float: right">查看</a>
+                            </div>
                             <div class="clear-both"></div>
                         </div>
-                        <div class="card-body no-padding" id="chart" style="height: 250px;margin-bottom:10px">
+                        <div class="card-body no-padding" id="chart" style="height: 250px; margin-bottom: 10px">
                         </div>
                     </div>
                 </div>
@@ -330,6 +344,9 @@
                         <div class="card-header">
                             <div class="card-title">
                                 <div class="title"><i class="fa fa-area-chart"></i>Braden压疮评估统计</div>
+                            </div>
+                            <div class="card-title" style="float: right">
+                                <a class="title" style="float: right">查看</a>
                             </div>
                             <div class="clear-both"></div>
                         </div>
@@ -345,6 +362,9 @@
                             <div class="card-title">
                                 <div class="title"><i class="fa fa-area-chart"></i>Morse跌倒评估统计</div>
                             </div>
+                            <div class="card-title" style="float: right">
+                                <a class="title" style="float: right">查看</a>
+                            </div>
                             <div class="clear-both"></div>
                         </div>
                         <div class="card-body no-padding" id="chart2" style="height: 250px">
@@ -356,6 +376,9 @@
                         <div class="card-header">
                             <div class="card-title">
                                 <div class="title"><i class="fa fa-area-chart"></i>VTE评估统计</div>
+                            </div>
+                            <div class="card-title" style="float: right">
+                                <a class="title" style="float: right">查看</a>
                             </div>
                             <div class="clear-both"></div>
                         </div>
@@ -370,6 +393,9 @@
                         <div class="card-header">
                             <div class="card-title">
                                 <div class="title"><i class="fa fa-area-chart"></i>非计划性拔管评估统计</div>
+                            </div>
+                            <div class="card-title" style="float: right">
+                                <a class="title" style="float: right">查看</a>
                             </div>
                             <div class="clear-both"></div>
                         </div>

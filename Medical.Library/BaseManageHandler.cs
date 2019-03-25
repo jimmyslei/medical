@@ -27,6 +27,9 @@ namespace Medical.Library
                     case "Login":
                         rstr = Login(context);
                         break;
+                    case "getUserName":
+                        rstr = GetUserName(context);
+                        break;
                     case "UpdatePwd":
                         rstr = UpdatePwd(context);
                         break;
@@ -112,12 +115,20 @@ namespace Medical.Library
             var userName = context.Request["userName"];
             var pwd = context.Request["pwd"];
             var state = Convert.ToInt32(context.Request["state"]);
-
+            string user = string.Empty;
             PersonModel person = new PersonModel();
             person.UserName = userName;
             person.Pwd = pwd;
+            var result = bases.Login(person, state, ref user);
 
-            return bases.Login(person, state);
+            return "{" + "\"data\":" + result + "," +
+                 "\"user\":\"" + user + "\"}";
+        }
+
+        private string GetUserName(HttpContext context)
+        {
+            var code = context.Request["userCode"];
+            return bases.GetUserName(code);
         }
 
         private string UpdatePwd(HttpContext context)
@@ -344,7 +355,7 @@ namespace Medical.Library
             var score = context.Request["score"];
             var rank = context.Request["rank"];
 
-            return bases.EditAssess(Convert.ToInt32(patId),assItem,Convert.ToInt32(assType), Convert.ToDouble(score), Convert.ToInt32(rank));
+            return bases.EditAssess(Convert.ToInt32(patId), assItem, Convert.ToInt32(assType), Convert.ToDouble(score), Convert.ToInt32(rank));
         }
 
         private string GetAssess(HttpContext context)
@@ -365,7 +376,7 @@ namespace Medical.Library
                   "\"page\":" + pageIndex + "," +
                   "\"total\":" + pageCount + "}";
         }
-        
+
         private string GetAssCountbyPainId(HttpContext context)
         {
             var painId = context.Request["painId"];

@@ -48,10 +48,10 @@
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">操作 <span class="caret"></span></button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li><a href="#" onclick="Del(1,'确定要给该病人办理出院吗？')">出院</a></li>
                                                 <li><a href="#" onclick="Add()">新增</a></li>
                                                 <li><a href="#" onclick="Edit()">修改</a></li>
-                                                <%--<li><a href="#" onclick="Del(-1,'确定要删除该数据吗？')">删除</a></li>--%>
+                                                <li><a href="#" onclick="Del(1,'确定要给该病人办理出院吗？')">出院</a></li>
+                                                <li><a href="#" onclick="Del(-1,'确定要删除该数据吗？')">删除</a></li>
                                             </ul>
                                         </div>
                                         <div class="btn-group">
@@ -65,6 +65,26 @@
                                                 <li><a href="#" onclick="Assess(5)">非计划拔管评估</a></li>
                                             </ul>
                                         </div>
+                                        <div class="btn-group">
+                                            <div class="radio3 radio-check radio-success">
+                                                <input type="radio" id="radio0" name="radio1" value="0" checked>
+                                                <label for="radio0">
+                                                    在院
+                                                </label>
+                                            </div>
+                                            <div class="radio3 radio-check radio-success">
+                                                <input type="radio" id="radio1" name="radio1" value="1">
+                                                <label for="radio1">
+                                                    出院
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <label for="org">科室</label>
+                                        <select class="form-control text select2-selection" style="font-size: 0.9em; display: -webkit-inline-box !important; width: 150px !important; height: 30px !important" cname="org" id="org">
+                                        </select>
+                                        <label for="dep">床位</label>
+                                        <select class="form-control text select2-selection" style="font-size: 0.9em; display: -webkit-inline-box !important; width: 150px !important; height: 30px !important" cname="dep" id="dep">
+                                        </select>
                                     </div>
                                     <div class="panel-body">
                                         <div class="col-sm-12">
@@ -139,7 +159,157 @@
                                 </div>
                             </form>
                         </textarea>
-                        <textarea id="outhosp"></textarea>
+
+                        <textarea id="outHos" style="display: none;">
+                            <form id="outform" class="form-inline" style="max-height: 350px;overflow:scroll;overflow-x:hidden;">
+                            
+                            <div class="form-group text-show">
+                                <label for="phone">出院时间</label>
+                                <input type="text" readonly class="form-control text" cName="outTime" id="outTime" placeholder="yyyy-mm-dd">
+                            </div>
+                            <div class="form-group text-show">
+                                <label for="phone">手术名称</label>
+                                <input type="text" class="form-control text" cName="shsName" id="shsName" >
+                            </div>
+                            <div class="form-group text-all">
+                                <label for="phone">伤口情况:</label>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-fa-light-0">
+                                    <label for="checkbox-fa-light-0">
+                                        Ⅰ期愈合
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-fa-light-1">
+                                    <label for="checkbox-fa-light-1">
+                                        Ⅱ期愈合
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-fa-light-2">
+                                    <label for="checkbox-fa-light-2">
+                                        Ⅲ期愈合
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-fa-light-3">
+                                    <label for="checkbox-fa-light-3">
+                                        拆线
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-fa-light-4">
+                                    <label for="checkbox-fa-light-4">
+                                        未拆线
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group text-all">
+                                <label for="phone">病愈情况:</label>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-fa-0">
+                                    <label for="checkbox-fa-0">
+                                        治愈
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-fa-1">
+                                    <label for="checkbox-fa-1">
+                                        好转
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-fa-2">
+                                    <label for="checkbox-fa-2">
+                                        未愈
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-fa-3">
+                                    <label for="checkbox-fa-3">
+                                        其他
+                                    </label>
+                                </div>
+                                
+                            </div>
+                            <div class="form-group text-all">
+                                <label for="phone">活动能力:</label>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-don-0">
+                                    <label for="checkbox-don-0">
+                                        自理
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-don-1">
+                                    <label for="checkbox-don-1">
+                                        部分自理
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-don-2">
+                                    <label for="checkbox-don-2">
+                                        不能自理
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group text-all">
+                                <label for="phone">出院方式:</label>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-chu-0">
+                                    <label for="checkbox-chu-0">
+                                        步行
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-inline checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-chu-1">
+                                    <label for="checkbox-chu-1">
+                                        轮椅
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group text-all">
+                                <label for="phone">一般指导:</label>
+                                <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-yi-0">
+                                    <label for="checkbox-yi-0">
+                                        休养环境应清洁舒适，保持室内空气新鲜
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-yi-1">
+                                    <label for="checkbox-yi-1">
+                                        保持良好心境，有利康复 
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-yi-2">
+                                    <label for="checkbox-yi-2">
+                                        根据自身情况适当锻炼，争强体质 
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-yi-3">
+                                    <label for="checkbox-yi-3">
+                                        注意营养饮食，有利机体康复 
+                                    </label>
+                                </div>
+                                <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-yi-4">
+                                    <label for="checkbox-yi-4">
+                                        伤口拆线后若发现红肿、有硬结、疼痛情及时到医院就医 
+                                    </label>
+                                </div>
+                                 <div class="checkbox3 checkbox-success checkbox-check checkbox-round  checkbox-light">
+                                    <input type="checkbox" value="1" id="checkbox-yi-5">
+                                    <label for="checkbox-yi-5">
+                                        按医生预约时间定时复诊
+                                    </label>
+                                </div>
+                            </div>
+                          </form>
+                        </textarea>
+
                     </div>
                 </div>
             </div>
@@ -165,8 +335,14 @@
             if (getCookie("Home_UserName") == null) {
                 window.location.href = "../Login";
             }
-            $(".username").text(getCookie("Home_UserName"));
             var state = getCookie("state");
+
+            if (state == "1") {
+                $(".username").text(getCookie("Home_UserName"));
+            } else {
+                $(".username").text(getCookie("user") + " " + getCookie("Home_UserName"));
+            }
+
             if (state == "2") {
                 $("#baseLi").hide();
                 $("#updatePwd").hide();
@@ -270,7 +446,6 @@
             load();
         })
 
-
         function load() {
             $('#jDataGrid').jqGrid({
                 url: 'BaseManageHandler.ashx?tag=GetPatientList',
@@ -290,7 +465,7 @@
                     { name: '序号', index: '序号', width: 40, align: 'center' },
                     {
                         name: '标识', index: '标识', width: 60, formatter: function (cellvalue, options, rowObject) {
-                            if (cellvalue=="1") {
+                            if (cellvalue == "1") {
                                 return "<span style='color:red'>已出院</span>";
                             } else {
                                 return "<span style='color:green'>在院</span>";
@@ -441,7 +616,62 @@
             }, false);
         }
 
-        function Del(state,tip) {
+        function Out() {
+            var outhtml = $("#outHos").val();
+
+            layer.open({
+                content: outhtml,
+                shadeClose: true,
+                btn: ['确定', '取消'],
+                anim: 'up',
+                yes: function (index) {
+                    var url = "BaseManageHandler.ashx?tag=AddPatientInfo";
+                    var data = comFn.getFromVal();
+                    data.depName = $("#dep").find("option:selected").text();
+                    data.state = "1";
+                    if (save(url, data)) {
+                        layer.open({
+                            content: '保存成功',
+                            skin: 'msg',
+                            time: 2
+                        });
+                        layer.close(index);
+                        queryFunc(pageIndex, pageSize);
+
+                    } else {
+                        layer.open({
+                            content: '保存失败',
+                            skin: 'msg',
+                            time: 2
+                        });
+                    }
+                },
+                success: function (elem) {
+                    $('#code').focus();
+                    var width = $(".layui-m-layerchild").width();
+                    if (width < 350) {
+                        $(".text-show").css({ "width": "95%" });
+                    } else {
+                        $(".text-show").css({ "width": "45%" });
+                    }
+
+                    laydate.render({
+                        elem: '#outTime',
+                        type: 'datetime',
+                        min: '1700-01-01',
+                        max: '2250-01-01',
+                        format: 'yyyy-MM-dd',
+                        theme: '#16a1d3',
+                        done: function (value, date, endDate) {
+
+                        }
+                    });
+                }
+            });
+        }
+
+
+        function Del(state, tip) {
             var rowId = $('#jDataGrid').jqGrid('getGridParam', 'selrow');
             if (rowId) {
                 layer.open({

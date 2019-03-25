@@ -143,20 +143,20 @@ function login() {
     });
 
 
-    //Manage
-
     $.ajax({
         type: 'post',
         url: "View/BaseManageHandler.ashx?tag=Login&random=" + Math.random(),
         dataType: "json",
         data: { userName: n, pwd: p, state: s },
         success: function (data, textStatus) {
-            if (data == "0") {
+            debugger;
+            if (data.data == "0") {
                 layer.msg('用户名或密码错误', { icon: 5 });
                 Code();
             }
             else {
                 setCookie("state", s, 30);
+                setCookie("user", data.user, 30);
                 window.location.href = "View/Home.aspx?state=" + s;
             }
             layer.close(index);

@@ -92,8 +92,14 @@
             if (getCookie("Home_UserName") == null) {
                 window.location.href = "../Login";
             }
-            $(".username").text(getCookie("Home_UserName"));
             var state = getCookie("state");
+
+            if (state == "1") {
+                $(".username").text(getCookie("Home_UserName"));
+            } else {
+                $(".username").text(getCookie("user") + " " + getCookie("Home_UserName"));
+            }
+
             if (state == "2") {
                 $("#baseLi").hide();
                 $("#updatePwd").hide();

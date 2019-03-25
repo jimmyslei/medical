@@ -177,7 +177,6 @@ F:\医疗\Medical\Medical.Web\bin\Microsoft.ApplicationInsights.dll
 F:\医疗\Medical\Medical.Web\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 F:\医疗\Medical\Medical.Web\bin\Medical.Common.dll
 F:\医疗\Medical\Medical.Web\bin\Medical.Service.dll
-F:\医疗\Medical\Medical.Web\bin\Newtonsoft.Json.dll
 F:\医疗\Medical\Medical.Web\bin\Yun.DataService.dll
 F:\医疗\Medical\Medical.Web\bin\Medical.Model.dll
 F:\医疗\Medical\Medical.Web\bin\Medical.Library.pdb

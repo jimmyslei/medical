@@ -433,6 +433,7 @@
     <Content Include="View\AssessList.aspx" />
     <Content Include="View\BasicSignScale.aspx" />
     <Content Include="View\BradenScale.aspx" />
+    <Content Include="View\Count.aspx" />
     <Content Include="View\Department.aspx" />
     <Content Include="View\HisPatienList.aspx" />
     <Content Include="View\Home.aspx" />
@@ -470,6 +471,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\Count.aspx.cs">
+      <DependentUpon>Count.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View\Count.aspx.designer.cs">
+      <DependentUpon>Count.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -495,7 +503,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>28899</DevelopmentServerPort>
           <DevelopmentServerVPath>
           </DevelopmentServerVPath>
           <IISUrl>http://localhost/Medical.Web</IISUrl>
